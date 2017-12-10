@@ -1,0 +1,33 @@
+	const BOOK_STATUS = {
+		WAITING: 1,
+		APPROVED: 2,
+		REJECTED: 3
+	}
+
+	const BOOK_ACTIONS = {
+		UPLOADED: 1,
+		DOWNLOADED: 2,
+		ADDED_FAVORITE: 3,
+		APPROVED: 4,
+		REJECTED: 5,
+		EDITED: 6 
+	}
+
+	const USER_ACTIONS = {
+		LOGIN: 1,
+		LOGOUT: 2,
+		CHANGEDINFO: 3
+	}
+
+	const USER_ROLE = {
+		ADMIN: 1,
+		LIBRARIAN: 2,
+		USER: 3
+	}
+
+	module.exports = {
+		BOOK_STATUS: BOOK_STATUS,
+		BOOK_ACTIONS: BOOK_ACTIONS,
+		USER_ACTIONS: USER_ACTIONS,
+		USER_ROLE: USER_ROLE 
+	}
