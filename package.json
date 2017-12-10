@@ -1,33 +1,29 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "TTCN_TVDTDHBK",
+  "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "start": "nodejs ./bin/www",
-    "test": "mocha --timeout 10000"
-  },
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "cookie-parser": "~1.0.1",
-    "cors": "^2.8.4",
-    "crypto": "^1.0.1",
-    "debug": "~0.7.4",
-    "dotenv": "^4.0.0",
-    "express": "~4.0.0",
-    "express-jwt": "^5.3.0",
-    "gm": "^1.23.0",
-    "jade": "~1.3.0",
-    "jsonwebtoken": "^8.1.0",
-    "morgan": "~1.0.0",
-    "multer": "^1.3.0",
-    "mysql": "^2.15.0",
-    "passport": "^0.4.0",
-    "passport-local": "^1.0.0",
-    "serve-favicon": "^2.4.5",
-    "static-favicon": "~1.0.0"
+    "axios": "^0.17.1",
+    "base-64": "^0.1.0",
+    "history": "^4.7.2",
+    "jquery": "^3.2.1",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "1.0.17",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
+    "uuid": "^3.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-http": "^3.0.0"
+    "redux-devtools": "^3.4.0"
   }
 }

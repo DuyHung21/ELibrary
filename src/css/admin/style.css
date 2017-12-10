@@ -1,0 +1,12 @@
+#admin-login-container{
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(173, 173, 173);
+  padding-top: 70px;
+}
+
+#admin-login-container #login-form{
+  background-color: rgb(250, 250, 250);
+  padding: 30px;
+  box-shadow: 0 3px 8px rgb(100, 80, 38);
+}
