@@ -188,7 +188,7 @@ const UploadBox = props => {
               </div>
               <div className="col-md-9">
                 <select class="form-control" id="nameFac" onChange={props.onChange}  >
-                  <option value={null}>---Lĩnh vực khoa---</option>
+                  <option value="">---Lĩnh vực khoa---</option>
                   <option value="cntt">Công nghệ thông tin</option>
                   <option value="cdt">Cơ điện tử</option>
                   <option value="ck">Cơ khí</option>
@@ -214,7 +214,7 @@ const UploadBox = props => {
               </div>
               <div className="col-md-9">
                 <input className = "form-control" type="file" id="chooseFile" onChange={props.onChange} required/>
-                <p className = "text-danger" >{props.errors.file}</p>
+                <p className = "text-danger" >{props.errors.chooseFile}</p>
               </div>
             </div>
 
@@ -237,11 +237,17 @@ class UserControl extends Component {
         descriptionDoc: null,
         nameFac: null,
         nameYearFac: null,
-        file: null,
+        chooseFile: null,
       },
       errors: {
         user: {},
-        uploadFile: {}
+        uploadFile: {
+          nameDoc: null,
+          descriptionDoc: null,
+          nameFac: null,
+          nameYearFac: null,
+          chooseFile: null,
+        }
       }
     }
   }
@@ -261,6 +267,13 @@ class UserControl extends Component {
         uploadFile: {
           ...this.state.uploadFile,
           [e.target.id]: e.target.value,
+        },
+        errors: {
+          ...this.state.errors,
+          uploadFile: {
+            ...this.state.errors.uploadFile,
+            [e.target.id]: e.target.value === null || e.target.value === "" ? "Errors" : null,
+          }
         }
       })
     }
@@ -269,7 +282,20 @@ class UserControl extends Component {
       data.append('file', e.target.files[0]);
       data.append('name', 'file pdf');
       data.append('desciption', 'some description');
-      console.log(data);
+      console.log(e.target.files[0]);
+      this.setState({
+        uploadFile: {
+          ...this.state.uploadFile,
+          [e.target.id]: data,
+        },
+        errors: {
+          ...this.state.errors,
+          uploadFile: {
+            ...this.state.errors.uploadFile,
+            [e.target.id]: e.target.files[0] === undefined ? "Errors" : null,
+          }
+        }
+      })
     }
     
   }
@@ -298,8 +324,15 @@ class UserControl extends Component {
 
   handleUploadFile = e => {
     e.preventDefault();
-    this.state.uploadFile
-    console.log(this.state.uploadFile);
+    let isAllowUpload = true;
+    Object.keys(this.state.uploadFile).forEach(key => {
+      if (this.state.uploadFile[key] === null) {
+        isAllowUpload = false;
+      }
+    })
+    if(isAllowUpload) {
+      this.props.onUploadFile(this.state.uploadFile);
+    }
   }
   
   render(){

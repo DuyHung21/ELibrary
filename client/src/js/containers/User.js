@@ -11,6 +11,7 @@ class User extends Component {
     super(props);
     this.handleChangePass = this.handleChangePass.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleUploadFile = this.handleUploadFile.bind(this);
   }
 
   async handleUpdate(user) {
@@ -31,6 +32,10 @@ class User extends Component {
       alert("Errors update");
     }
   }
+
+  async handleUploadFile(uploadFile) {
+    console.log(uploadFile);
+  }
   
   render(){
     return(
@@ -41,6 +46,7 @@ class User extends Component {
           userActive={this.props.userActive}
           onUpdate={this.handleUpdate}
           onChangePass={this.handleChangePass}
+          onUploadFile={this.handleUploadFile}
         />
         <Footer />
       </div>

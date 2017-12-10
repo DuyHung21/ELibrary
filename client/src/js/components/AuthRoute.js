@@ -18,12 +18,10 @@ class AuthRoute extends Component {
   }
 
   checkAuth() {
-    return true;
-    // if(localStorage.getItem("token")) {
-    //   return true;
-    // } 
-    // return false;
-    
+    if(localStorage.getItem("token")) {
+      return true;
+    } 
+    return false;
   }
 
   render(){
