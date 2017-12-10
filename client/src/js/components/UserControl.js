@@ -161,14 +161,14 @@ const UploadBox = props => {
     <div className="screen-control">
       <BoxContain name="Upload File PDF">
         <div className="form-upload">
-          <form>
+          <form onSubmit={props.onUpLoadFile}>
             <div className="form-group row">
               <div className="col-md-3">
                 <label htmlFor="nameDoc">Tên tài liệu: </label>
               </div>
               <div className="col-md-9">
                 <input className = "form-control" type="text" id="nameDoc" onChange={props.onChange} required placeholder="Tên tài liệu"/>
-                <p className = "text-danger" ></p>
+                <p className = "text-danger" >{props.errors.nameDoc}</p>
               </div>
             </div>
 
@@ -178,7 +178,7 @@ const UploadBox = props => {
               </div>
               <div className="col-md-9">
                 <textarea className = "form-control" id="descriptionDoc" onChange={props.onChange} required placeholder="Mô tả" rows="4"/>
-                <p className = "text-danger" ></p>
+                <p className = "text-danger" >{props.errors.descriptionDoc}</p>
               </div>
             </div>
 
@@ -188,13 +188,13 @@ const UploadBox = props => {
               </div>
               <div className="col-md-9">
                 <select class="form-control" id="nameFac" onChange={props.onChange}  >
-                  <option value="0">---Lĩnh vực khoa---</option>
+                  <option value={null}>---Lĩnh vực khoa---</option>
                   <option value="cntt">Công nghệ thông tin</option>
                   <option value="cdt">Cơ điện tử</option>
                   <option value="ck">Cơ khí</option>
                   <option value="linhtinh">Hội cafe bóng đá bida</option>
                 </select>
-                <p className = "text-danger" ></p>
+                <p className = "text-danger" >{props.errors.nameFac}</p>
               </div>
             </div>
 
@@ -204,7 +204,7 @@ const UploadBox = props => {
               </div>
               <div className="col-md-9">
                 <input className = "form-control" type="number" id="nameYearFac" onChange={props.onChange} required/>
-                <p className = "text-danger" ></p>
+                <p className = "text-danger" >{props.errors.nameYearFac}</p>
               </div>
             </div>
             
@@ -214,7 +214,7 @@ const UploadBox = props => {
               </div>
               <div className="col-md-9">
                 <input className = "form-control" type="file" id="chooseFile" onChange={props.onChange} required/>
-                <p className = "text-danger" ></p>
+                <p className = "text-danger" >{props.errors.file}</p>
               </div>
             </div>
 
@@ -232,7 +232,17 @@ class UserControl extends Component {
     super(props);
     this.state = {
       user: this.props.userActive,
-      curAction: "info",
+      uploadFile: {
+        nameDoc: null,
+        descriptionDoc: null,
+        nameFac: null,
+        nameYearFac: null,
+        file: null,
+      },
+      errors: {
+        user: {},
+        uploadFile: {}
+      }
     }
   }
 
@@ -241,29 +251,27 @@ class UserControl extends Component {
       user: {
         ...this.state.user,
         [e.target.id]: e.target.value
-      },
-      uploadFile: {
-        nameDoc: "",
-        descriptionDoc: "",
-        nameFac: "0",
-        nameYearFac: "",
-        data: new FormData(),
       }
     })
   }
 
   handleChangeFormUpload = (e) => {
     if (e.target.id !== "chooseFile") {
-      
+      this.setState({
+        uploadFile: {
+          ...this.state.uploadFile,
+          [e.target.id]: e.target.value,
+        }
+      })
     }
     else {
-      console.log(e.target.files[0]);
+      const data = new FormData();
+      data.append('file', e.target.files[0]);
+      data.append('name', 'file pdf');
+      data.append('desciption', 'some description');
+      console.log(data);
     }
-    // const data = new FormData();
-    // data.append('file', e.target.files[0]);
-    // data.append('name', 'file pdf');
-    // data.append('desciption', 'some description');
-    // console.log(data);
+    
   }
 
   handleUpdate = (e) => {
@@ -287,14 +295,20 @@ class UserControl extends Component {
       });
     }
   }
+
+  handleUploadFile = e => {
+    e.preventDefault();
+    this.state.uploadFile
+    console.log(this.state.uploadFile);
+  }
   
   render(){
     const userInfo = props => {
       return (
         <UserInfo
           userActive={this.state.user}
-          onUpdate={this.handleUpdate}
           onChange={this.handleChangeFormUser}
+          onUpdate={this.handleUpdate}
           onChangePass={this.handleChangePass}
           {...props}
         />
@@ -304,6 +318,8 @@ class UserControl extends Component {
       return (
         <UploadBox
           onChange={this.handleChangeFormUpload}
+          onUpLoadFile={this.handleUploadFile}
+          errors={this.state.errors.uploadFile}
           {...props}
         />
       )
