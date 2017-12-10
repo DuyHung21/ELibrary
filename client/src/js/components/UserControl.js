@@ -189,10 +189,10 @@ const UploadBox = props => {
               <div className="col-md-9">
                 <select class="form-control" id="nameFac" onChange={props.onChange}  >
                   <option value="">---Lĩnh vực khoa---</option>
-                  <option value="cntt">Công nghệ thông tin</option>
-                  <option value="cdt">Cơ điện tử</option>
-                  <option value="ck">Cơ khí</option>
-                  <option value="linhtinh">Hội cafe bóng đá bida</option>
+                  <option value="1">Công nghệ thông tin</option>
+                  <option value="2">Cơ điện tử</option>
+                  <option value="3">Cơ khí</option>
+                  <option value="4">Hội cafe bóng đá bida</option>
                 </select>
                 <p className = "text-danger" >{props.errors.nameFac}</p>
               </div>
@@ -278,15 +278,10 @@ class UserControl extends Component {
       })
     }
     else {
-      const data = new FormData();
-      data.append('file', e.target.files[0]);
-      data.append('name', 'file pdf');
-      data.append('desciption', 'some description');
-      console.log(e.target.files[0]);
       this.setState({
         uploadFile: {
           ...this.state.uploadFile,
-          [e.target.id]: data,
+          [e.target.id]: e.target.files[0],
         },
         errors: {
           ...this.state.errors,
@@ -331,7 +326,14 @@ class UserControl extends Component {
       }
     })
     if(isAllowUpload) {
-      this.props.onUploadFile(this.state.uploadFile);
+      const data = new FormData();
+      data.append('file', this.state.uploadFile.chooseFile);
+      data.append('name', this.state.uploadFile.nameDoc);
+      data.append('author', this.props.userActive.username);
+      data.append('description', this.state.uploadFile.descriptionDoc);
+      data.append('category', this.state.uploadFile.nameFac);
+      data.append('userId', this.props.userActive.id);
+      this.props.onUploadFile(data);
     }
   }
   
@@ -367,10 +369,10 @@ class UserControl extends Component {
                 onChangAction={this.handleChangeAction}
               />
             </div>
-            {
-              
-            }
             <div className="col-md-9 col-thin">
+              {
+                this.props.isLoadingUpload && <div id="loading-line"></div> 
+              }
               <Switch>
                 <Route exact path="/user" render={userInfo} />
                 <Route exact path="/user/info" render={userInfo} />

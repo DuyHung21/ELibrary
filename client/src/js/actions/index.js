@@ -7,11 +7,22 @@ import {
   onChangePass
 } from "./users";
 
+import {
+  uploadFile,
+  getAllBooks,
+  getCatBooks,
+  getInfoBook
+} from "./file";
 export {
   onLoginUser,
   onLogoutUser,
   onRegisterUser,
   onCheckAuth,
   onUpdateUser,
-  onChangePass
+  onChangePass,
+  //File
+  uploadFile,
+  getAllBooks,
+  getCatBooks,
+  getInfoBook
 }

@@ -3,12 +3,21 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import { Route, Switch } from "react-router-dom";
 
-import {onLoginUser, onLogoutUser, onUpdateUser, onChangePass} from "../actions";
+import {
+  onLoginUser,
+  onLogoutUser,
+  onUpdateUser,
+  onChangePass,
+  uploadFile
+} from "../actions";
 import { Header, Menu, Footer } from "../components/layouts";
 import { UserControl } from "../components";
 class User extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      isLoadingUpload: false,
+    }
     this.handleChangePass = this.handleChangePass.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleUploadFile = this.handleUploadFile.bind(this);
@@ -34,7 +43,19 @@ class User extends Component {
   }
 
   async handleUploadFile(uploadFile) {
-    console.log(uploadFile);
+    this.setState({
+      isLoadingUpload: true,
+    })
+    try {
+      await this.props.uploadFile(uploadFile);
+      this.setState({
+        isLoadingUpload: false,
+      })
+    } catch(er) {
+      this.setState({
+        isLoadingUpload: false,
+      })
+    }
   }
   
   render(){
@@ -47,6 +68,7 @@ class User extends Component {
           onUpdate={this.handleUpdate}
           onChangePass={this.handleChangePass}
           onUploadFile={this.handleUploadFile}
+          isLoadingUpload={this.state.isLoadingUpload}
         />
         <Footer />
       </div>
@@ -65,7 +87,8 @@ function mapDispatchToProps(dispatch){
     onLoginUser,
     onLogoutUser,
     onUpdateUser,
-    onChangePass
+    onChangePass,
+    uploadFile
   }, dispatch)
 }
 

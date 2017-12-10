@@ -3,7 +3,12 @@ import React, {Component} from 'react';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
-import {onLoginUser, onLogoutUser, onCheckAuth} from "../actions";
+import {
+  onLoginUser,
+  onLogoutUser,
+  onCheckAuth,
+  getAllBooks,
+} from "../actions";
 
 import { HomeContent } from "../components/";
 import { Header, Footer, Sidebar, Menu } from "../components/layouts";
@@ -18,13 +23,26 @@ class Home extends Component {
 
   componentWillMount() {
     this.props.onCheckAuth();
+    this.props.getAllBooks();
   }
 
   handleLogin = (user) => {
     this.props.onLoginUser(user);
   }
 
+  componentDidUpdate() {
+    console.log(this.props.books.allBooks);
+  }
+
   render(){
+    const home = props => {
+      return (
+        <HomeContent
+          {...props}
+          allBooks={this.props.books.allBooks}
+        />
+      )
+    };
     return(
       <div>
         <Header userActive={this.props.userActive} />
@@ -38,10 +56,10 @@ class Home extends Component {
 
               <div className = "col-md-9 col-thin">
                 <Switch>
-                  <Route exact path = "/" component = {HomeContent} />
-                  <Route exact path = "/home" component = {HomeContent} />
-                  <Route path = "/khoa/:name" component = {ViewFaculty} />
-                  <Route path = "/book/:id" component = {ViewBook} />
+                  <Route exact path = "/" render = {home} />
+                  <Route exact path = "/home" render = {home} />
+                  <Route exact path = "/khoa/:name" component = {ViewFaculty} />
+                  <Route exact path = "/book/:id" component = {ViewBook} />
                 </Switch>
               </div>
             </div>
@@ -55,7 +73,8 @@ class Home extends Component {
 
 function mapStateToProps(state) {
   return{
-    userActive: state.userActive
+    userActive: state.userActive,
+    books: state.books,
   }
 }
 
@@ -63,7 +82,8 @@ function mapDispatchToProps(dispatch){
   return bindActionCreators({
     onLoginUser,
     onLogoutUser,
-    onCheckAuth
+    onCheckAuth,
+    getAllBooks
   }, dispatch)
 }
 
