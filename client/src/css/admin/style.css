@@ -10,3 +10,98 @@
   padding: 30px;
   box-shadow: 0 3px 8px rgb(100, 80, 38);
 }
+
+#admin-container {
+  overflow: hidden;
+}
+
+
+#admin-container header {
+  background-color: rgb(15, 15, 15);
+  color: white;
+  padding: 10px 28px;
+  height: 8vh;
+  width: 100%;
+}
+
+#admin-container header i {
+  color: rgb(133, 133, 133);
+}
+
+#admin-container header h3 {
+  margin: 0;
+}
+
+#admin-container header h4 {
+  display: inline;
+  margin-right: 15px;
+}
+
+#admin-container header button {
+  border: 1px solid white;
+  background-color: black;
+  color: white;
+  outline: none;
+}
+
+#admin-container header button:hover{
+  border: 1px solid red;
+}
+
+#admin-container #sidebar {
+  height: 92vh;
+  background-color: rgb(27, 27, 27);
+}
+
+#admin-container #sidebar ul {
+  margin: 0;
+  padding: 0;
+}
+
+/* #admin-container #sidebar ul li {
+} */
+
+#admin-container #sidebar a {
+  font-size: 18px;
+  padding: 15px 30px;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  display: block;
+  border-bottom: 0.5px solid rgb(43, 43, 43);
+}
+
+#admin-container #sidebar a:hover {
+  background-color: rgb(0, 0, 0);
+}
+
+#admin-container #sidebar a i {
+  margin-right: 15px;
+  color: rgb(177, 177, 177);
+}
+
+#admin-container #content {
+  margin: 0;padding: 0;
+}
+
+#admin-container #users-content {
+  width: 100%;
+  height: 100%;
+  padding-right: 30px;
+}
+
+#admin-container #users-content .container {
+  width: 100%;
+}
+#admin-container #users-content table {
+  background-color: white;
+  padding: 10px;
+}
+#admin-container #users-content table td button {
+  margin-right: 4px;
+}
+
+#admin-container #users-content .pagination-container {
+  text-align: right;
+  cursor: pointer;
+}

@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
 
-import '../../../css/admin/style.css';
-
 class LoginAdminContent extends Component {
   render(){
     return(

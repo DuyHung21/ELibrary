@@ -22,7 +22,7 @@ class App extends Component {
             <Route exact path = "/login" component = {Login} />
             <Route exact path = "/register" component = {Register} />
             <Route exact path = "/admin/login" component = {LoginAdmin} />
-            <AuthAdminRoute exact path = "/admin" component = {Dashboard} />
+            <AuthAdminRoute path = "/admin" component = {Dashboard} />
             <AuthRoute path="/user" component={User}/>
             <Route path = "/" component = {Home} />
           </Switch>

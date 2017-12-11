@@ -12,7 +12,7 @@ class AuthAdminRoute extends Component {
   }
   
   checkAuth = () => {
-    return false;
+    return true;
   }
 
   render(){
