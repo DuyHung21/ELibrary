@@ -2,7 +2,6 @@
 
 process.env.NODE_ENV = 'test';
 const server = require('../app');
-const User = require('../app_api/controller/books');
 const db = require('../app_api/model/db');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
@@ -239,6 +238,8 @@ describe('User', () => {
 		})
 	})
 
+
+	//describe('It should rqui')
 
 
 })

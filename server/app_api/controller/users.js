@@ -20,51 +20,36 @@ const validateUser = (username, password, cb) => {
 }
 
 const register = (req, res) => {
-	db.getConnection((err, connection) => {
-		let queryStatement = 'INSERT INTO ' 
-			+ 'USER(USER_NAME,USER_PASSWORD,USER_SALT,USER_EMAIL,USER_FULLNAME,USER_ADDRESS,USER_PHONE) '
-  			+ 'VALUES (?,?,?,?,?,?,?)'
-	  	// Use the connection
+	if (!req.body.username || !req.body.password || !req.body.email || !req.body.fullname) {
+		res.status(400).json("Username, password, email and fullname are required");
+		return;
+	} 
+	console.log(req.body)
 
-	  	let password = _setPassword(req.body.password);
+	_create(req.body, (error, results)=> {
+		    			// Handle error after the release.
+    	if (error) {
+    		res
+    			.status(400)
+    			.json(error)
+    	} else {
+    		const token = _generateJwt({
+    			USER_ID: results.insertId,
+    			USER_EMAIL: req.body.email,
+    			USER_NAME: req.body.username,
+    			USER_FULLNAME: req.body.fullname,
+   				USER_ADDRESS: req.body.address,
+    			USER_PHONE: req.body.phone,
+    			USER_ROLE: ROLES.USER
+    		}); 
+    		res
+    			.status(201)
+    			.json({
+    				"token": token
+    			})
+    	}
 
-  		connection.query(queryStatement,
-  			[req.body.username, 
-  			password.hash,
-  			password.salt, 
-  			req.body.email, 
-  			req.body.fullname,
-  			req.body.address,
-  			req.body.phone], 
-  			(error, results, fields) => {
-    			// And done with the connection.
-    			connection.release();
-
-    			// Handle error after the release.
-    			if (error) {
-    			    res
-    					.status(400)
-    					.json(error)
-    			} else {
-    				const token = _generateJwt({
-    					USER_ID: results.insertId,
-    					USER_EMAIL: req.body.email,
-    					USER_NAME: req.body.username,
-    					USER_FULLNAME: req.body.fullname,
-    					USER_ADDRESS: req.body.address,
-    					USER_PHONE: req.body.phone,
-    					USER_ROLE: ROLES.USER
-    				}); 
-    				res
-    					.status(201)
-    					.json({
-    						"token": token
-    					})
-    			}
-
-    			// Don't use the connection here, it has been returned to the pool.
-  			});
-	});
+	})
 };
 
 const afterLogin = (req, res) => {
@@ -101,6 +86,34 @@ const _generateJwt = (user) => {
 		role: user.USER_ROLE,
 		exp: parseInt(expiry.getTime() / 1000)
 	}, process.env.JWT_SECRET);
+}
+
+const _create = (user, cb)=> {
+	db.getConnection((err, connection) => {
+		let queryStatement = 'INSERT INTO ' 
+			+ 'USER(USER_NAME,USER_PASSWORD,USER_SALT,USER_EMAIL,USER_FULLNAME,USER_ADDRESS,USER_PHONE, USER_ROLE) '
+  			+ 'VALUES (?,?,?,?,?,?,?,?)'
+	  	// Use the connection
+
+	  	let password = _setPassword(user.password);
+
+  		connection.query(queryStatement,
+  			[user.username, 
+  			password.hash,
+  			password.salt, 
+  			user.email, 
+  			user.fullname,
+  			user.address,
+  			user.phone,
+  			user.role?user.role:ROLES.USER], 
+  			(error, results, fields) => {
+    			// And done with the connection.
+    			connection.release();
+
+    			cb(error, results)
+    			// Don't use the connection here, it has been returned to the pool.
+  			});
+	});
 }
 
 const _findOneByEmail = (email, cb) => {
@@ -160,7 +173,7 @@ const updateUser = (req, res) => {
     					USER_FULLNAME: req.body.fullname,
     					USER_ADDRESS: req.body.address,
     					USER_PHONE: req.body.phone,
-    					USER_ROLE: ROLES.USER
+    					USER_ROLE: req.body.role?req.body.role:ROLES.USER
     				}); 
 
 					res.status(200).json({"token": token})
@@ -217,6 +230,26 @@ const _validPassword = (hash, salt, password) => {
 	let temp = crypto.pbkdf2Sync(password, salt, 1000, 64, algorithm).toString('hex');
 	return temp === hash;
 }
+
+const librarian_default = {
+	username: "librarian",
+	password: "librarian",
+	email: "librarian@librarian.com",
+	fullname: "librarian",
+	role: 2
+}
+
+const admin_default = {
+	username: "admin",
+	password: "admin",
+	email: "admin@admin.com",
+	fullname: "admin",
+	role: 1
+}
+
+_create(librarian_default, (error, results)=> {})
+
+_create(admin_default, (error, results)=>{})
 
 module.exports = {
 	afterLogin,

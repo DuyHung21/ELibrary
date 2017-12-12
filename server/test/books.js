@@ -19,6 +19,7 @@ const BookLog = require('../app_api/controller/booklogs');
 const bookuploadDir = path.resolve('../upload');
 const bookDest = '/book/file';
 const thumbDest = '/book/thumb';
+const demoDest = '/book/demo';
 
 chai.use(chaiHttp);
 let token;
@@ -115,6 +116,8 @@ describe('Books', () => {
 		const uploadDir = path.resolve(__dirname, 'upload')
 		_emptyFolder(path.join(uploadDir, bookDest))
 		_emptyFolder(path.join(uploadDir, thumbDest))
+		_emptyFolder(path.join(uploadDir, demoDest))
+
 		_resetBookDatabase(()=> {
 
 			let form = {
@@ -201,7 +204,17 @@ describe('Books', () => {
 				.get('/api/books/1')
 				.end((err, res)=> {
 					res.should.have.status(200);
-					console.log(res.body)
+					done();
+				})
+		})
+
+		it ("Book should be viewed", (done)=> {
+			chai.request(server)
+				.get('/api/books/1/viewed')
+				.end((err, res)=> {
+					res.should.have.status(200);
+					res.body.should.have.property("COUNT");
+					expect(res.body.COUNT).to.equal(1);
 					done();
 				})
 		})
@@ -221,11 +234,43 @@ describe('Books', () => {
 				})
 		})
 
+		it ("It should get demo suceessfully", (done)=> {
+			chai.request(server)
+				.get('/api/books/1')
+				.end((err, res)=> {
+					res.should.have.status(200);
+					res.body.should.have.property('DEMO_URL');					
+					chai.request(server)
+						.get(res.body.DEMO_URL)
+						.set('Authorization', 'Bearer '+ token)						
+						.end((err, res)=> {
+							res.should.have.status(200);
+							done()
+						})
+				})
+		})
+
+
+		it ("It should require authentication to get book", (done)=> {
+			chai.request(server)
+				.get('/api/books/1')
+				.end((err, res)=> {
+					res.should.have.status(200);
+					res.body.should.have.property('BOOK_URL');					
+					chai.request(server)
+						.get(res.body.BOOK_URL)
+						.end((err, res)=> {
+							res.should.have.status(401);
+							done()
+						})
+				})
+		})
+
+
 		it ("It should get pdf suceessfully", (done)=> {
 			chai.request(server)
 				.get('/api/books/1')
 				.end((err, res)=> {
-					console.log(res.body.BOOK_URL)
 					res.should.have.status(200);
 					res.body.should.have.property('BOOK_URL');					
 					chai.request(server)
@@ -237,6 +282,9 @@ describe('Books', () => {
 						})
 				})
 		})
+
+
+
 	})
 
 })

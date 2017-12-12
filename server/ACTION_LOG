@@ -1,0 +1,12 @@
+10/12/2017:
+Done: 
+- complete GET Categories api
+- complete upload pdf api
+- create admin default and librarian default
+
+Todo:
+- create change status book for librarian api
+- create view log when user view book page
+- create count most viewed book api
+- create count downloaded book api
+- create count uploaded book api

@@ -9,6 +9,8 @@ var auth = jwt({
 
 const ctrlUser = require('../controller/users');
 const ctrlBook = require('../controller/books');
+const ctrlCategory = require('../controller/categories');
+
 const ctrlBookLog = require('../controller/booklogs');
 
 /* GET home page. */
@@ -22,11 +24,15 @@ router.put('/users/:userId', auth, ctrlUser.updateUser)
 router.put('/users/:userId/password', auth, ctrlUser.updatePassword)
 
 router.post('/books', auth, ctrlBook.create);
-
 router.get('/books', ctrlBook.find);
 router.get('/books/:bookId', ctrlBook.findOne);
+router.get('/books/:bookId/viewed', ctrlBook.countView);
 router.get('/download/img/:name', ctrlBook.downloadImg);
+router.get('/download/demo/:name', ctrlBook.downloadPdf);
 router.get('/download/pdf/:name', auth, ctrlBook.downloadPdf);
+
+
+router.get('/categories', ctrlCategory.find);
 
 
 //router.get('/books/:bookId/download', ctrlBook.download);
