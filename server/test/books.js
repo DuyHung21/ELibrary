@@ -19,7 +19,7 @@ const BookLog = require('../app_api/controller/booklogs');
 const bookuploadDir = path.resolve('../upload');
 const bookDest = '/book/file';
 const thumbDest = '/book/thumb';
-const demoDest = '/book/thumb';
+const demoDest = '/book/demo';
 
 chai.use(chaiHttp);
 let token;
@@ -208,6 +208,17 @@ describe('Books', () => {
 				})
 		})
 
+		it ("Book should be viewed", (done)=> {
+			chai.request(server)
+				.get('/api/books/1/viewed')
+				.end((err, res)=> {
+					res.should.have.status(200);
+					res.body.should.have.property("COUNT");
+					expect(res.body.COUNT).to.equal(1);
+					done();
+				})
+		})
+
 		it ("It should get image successfully", (done)=> {
 			chai.request(server)
 				.get('/api/books/1')
@@ -271,6 +282,7 @@ describe('Books', () => {
 						})
 				})
 		})
+
 
 
 	})

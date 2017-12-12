@@ -20,6 +20,12 @@ const validateUser = (username, password, cb) => {
 }
 
 const register = (req, res) => {
+	if (!req.body.username || !req.body.password || !req.body.email || !req.body.fullname) {
+		res.status(400).json("Username, password, email and fullname are required");
+		return;
+	} 
+	console.log(req.body)
+
 	_create(req.body, (error, results)=> {
 		    			// Handle error after the release.
     	if (error) {

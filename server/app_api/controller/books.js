@@ -24,16 +24,17 @@ const bookDest = '/book/file/';
 const thumbDest = '/book/thumb/';
 const demoDest = '/book/demo/';
 
-
+const GUESS = require('./enums.js').USER_GUESS
 
 const storage = multer.diskStorage({
 	destination: (req, file, cb) => {
 		cb(null, path.join(uploadFolderDir, bookDest));
 	},
 	filename: (req, file, cb) => {
-		console.log(req.body)
 		const filename = file.originalname.replace(/.pdf$/, "");
-		cb(null, filename + '_' + Date.now() + '.pdf');
+		//cb(null, filename + '_' + Date.now() + '.pdf');
+		cb(null, "file" + '_' + Date.now() + '.pdf');
+
 	}
 });
 const upload = multer({storage: storage}).single('file');
@@ -81,14 +82,24 @@ const find = (req, res) => {
 
 const findOne = (req, res) => {
 	let queryStatement = 'SELECT * from BOOK where BOOK_ID = ?';
+	let user;
+	if (req.headers.authorization) {
+		let raw_token = req.headers.authorization.split(" ")[1];
+		if (raw_token) {
+			let user_info_token = raw_token.split(".")[1];
+			if (user_info_token) {
+				user = JSON.parse(new Buffer(user_info_token, 'base64').toString('ascii'));
+			}
+		}
+	}
 	db.getConnection((err, connection) => {
 		connection.query(queryStatement, [req.params.bookId], (error, results, fields) => {
 			connection.release();
 			if (error) {
 				res.status(400).json(error)
 			} else {
+				booklogCtrl.createViewedLog(req.params.bookId, user?user.id:GUESS.USER_ID);
 				res.status(200).json(results[0])
-
 			}
 		})
 	})
@@ -102,7 +113,6 @@ const create = (req, res) => {
 		} 
 
 		const filename = req.file.filename.replace(/.pdf$/, '');
-
 		_saveThumb(filename,(thum_err) => {
 			if (thum_err) {
 				console.log(thum_err);
@@ -134,6 +144,17 @@ const create = (req, res) => {
 	 			})
 			});
 		})
+	})
+}
+
+const countView = (req, res)=> {
+	console.log("Hi");
+	booklogCtrl.countViewedLog(req.params.bookId, (error, result)=> {
+		if (error) {
+			res.status(400).json(error)
+		} else {
+			res.status(200).json(result)
+		}
 	})
 }
 
@@ -193,6 +214,8 @@ const downloadDemo= (req, res) => {
 }
 
 
+
+
 const _saveThumb = (bookName, cb) => {
 	const pathToFile = path.join(uploadFolderDir, bookDest, bookName + '.pdf');
 	const pathToThumb = path.join(uploadFolderDir, thumbDest, bookName + '.jpeg');
@@ -200,11 +223,7 @@ const _saveThumb = (bookName, cb) => {
 	gm(pathToFile).write(pathToThumb, (err) => {
 		if (!err) _saveDemo(bookName, pathToThumb, cb);
 		else cb(err);
-
-
 	})
-
-
 };
 
 const _saveDemo = (bookName, thumbDir, cb) => {
@@ -220,10 +239,12 @@ const _saveDemo = (bookName, thumbDir, cb) => {
 
 
 
+
 module.exports = {
 	find: find,
 	findOne: findOne,
 	create: create,
+	countView,
 	downloadImg,
 	downloadPdf,
 	downloadDemo

@@ -18,6 +18,18 @@ const _create = (bookId, userId, actionId) => {
 const _delete = (bookId, userId, actionId) => {
 }
 
+const _count = (bookId, actionId, cb)=> {
+	let statement = "SELECT COUNT(LOG_ID) AS COUNT FROM BOOKLOG WHERE BOOK_ID = ? and ACTION_ID = ?";
+	db.getConnection((err, connection)=> {
+		connection.query(statement, [bookId, actionId], (error, results, fields)=> {
+			connection.release();
+			cb(error, results[0]);
+		})
+	})
+}
+
+
+
 const findOne = (req, res) => {
 	const statement = 'SELECT * FROM BOOKLOG where LOG_ID = ?';
 	db.getConnection((err, connection) => {
@@ -75,6 +87,9 @@ const createViewedLog = (bookId, userId) => {
 	_create(bookId, userId, BOOK_ACTIONS.VIEWED);
 }
 
+const countViewedLog = (bookId, cb) => {
+	_count(bookId, BOOK_ACTIONS.VIEWED, cb);
+}  
 
 
 
@@ -87,5 +102,6 @@ module.exports = {
 	createEditedLog,
 	createViewedLog,
 	findOne,
-	findByBook
+	findByBook,
+	countViewedLog
 }
