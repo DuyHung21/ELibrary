@@ -10,7 +10,8 @@
 		ADDED_FAVORITE: 3,
 		APPROVED: 4,
 		REJECTED: 5,
-		EDITED: 6 
+		EDITED: 6,
+		VIEWED: 7
 	}
 
 	const USER_ACTIONS = {
@@ -22,7 +23,12 @@
 	const USER_ROLE = {
 		ADMIN: 1,
 		LIBRARIAN: 2,
-		USER: 3
+		USER: 3,
+		GUESS: 4
+	}
+
+	const USER_GUESS = {
+		USER_ID: 1
 	}
 
 	module.exports = {

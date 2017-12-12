@@ -20,6 +20,7 @@ if (process.env.NODE_ENV === 'test') {
 	  	database : db_url.path
 	});	
 } else {
+	console.log("Dev");
 	pool = mysql.createPool({
 		connectionLimit : 10,
 	  	host     : process.env.db_host_dev,

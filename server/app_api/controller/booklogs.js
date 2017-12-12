@@ -4,7 +4,7 @@ const BOOK_ACTIONS = require('./enums.js').BOOK_ACTIONS;
 const _create = (bookId, userId, actionId) => {
 	const statement = 'INSERT INTO BOOKLOG(USER_ID,BOOK_ID,ACTION_ID) VALUES (?, ?, ?)'
 	db.getConnection((err, connection) => {
-		connection.query(statement, [userId, bookId, actionId], (error, results, field) => {
+		connection.query(statement, [parseInt(userId), bookId, actionId], (error, results, field) => {
 			connection.release();
 			if (error) {
 				console.log(error);
@@ -71,6 +71,11 @@ const createEditedLog = (bookId, userId) => {
 	_create(bookId, userId, BOOK_ACTIONS.EDITED);
 }
 
+const createViewedLog = (bookId, userId) => {
+	_create(bookId, userId, BOOK_ACTIONS.VIEWED);
+}
+
+
 
 
 module.exports = {
@@ -80,6 +85,7 @@ module.exports = {
 	createApprovedLog,
 	createRejectedLog,
 	createEditedLog,
+	createViewedLog,
 	findOne,
 	findByBook
 }
