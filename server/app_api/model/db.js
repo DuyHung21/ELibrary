@@ -1,6 +1,5 @@
 'use strict';
 const mysql = require('mysql');
-
 let pool;
 if (process.env.NODE_ENV === 'test') {
 	pool = mysql.createPool({
@@ -11,14 +10,7 @@ if (process.env.NODE_ENV === 'test') {
 	  	database : process.env.db_database_test
 	});
 } else if (process.env.NODE_ENV === 'production') {
-	const db_url = new URL(process.env.CLEARDB_DATABASE_URL);
-	pool = mysql.createPool({
-		connectionLimit : 10,
-	  	host     : db_url.host,
-	  	user     : db_url.username,
-	  	password : db_url.password,
-	  	database : db_url.path
-	});	
+	pool = mysql.createPool(process.env.CLEARDB_DATABASE_URL);	
 } else {
 	console.log("Dev");
 	pool = mysql.createPool({

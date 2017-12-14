@@ -95,34 +95,77 @@ CREATE TABLE BOOKLOG (
   REFERENCES BOOKACTION(ACTION_ID)
 );
 
-INSERT INTO CATEGORY(CATEGORY_NAME,CATEGORY_DESCRIPTION) VALUES
-("cnnt","cnnt"),
-("dien","dien"),
-("nhiet","nhiet");
-	
-INSERT INTO STATUS(STATUS_NAME) VALUES
-("Waiting"),
-("Approved"),
-("Rejected");
+INSERT INTO CATEGORY(CATEGORY_ID, CATEGORY_NAME,CATEGORY_DESCRIPTION) VALUES
+(1, "Công Nghệ Thông Tin","CNTT"),
+(2, "Cơ Điện Tử","CĐT"),
+(3, "Cơ Khí","Cơ Khí"),
+(4, "Môi Trường", "MT"),
+(5, "Điện Tử Viễn Thông", "ĐTVT"),
+(6, "Linh Tinh", "LT");
 
-INSERT INTO ROLE(ROLE_NAME) VALUES
-("Admin"),
-("Librarian"),
-("User"),
-("Guess");
+INSERT INTO STATUS(STATUS_ID, STATUS_NAME) VALUES
+(1, "Waiting"),
+(2, "Approved"),
+(3, "Rejected");
 
-INSERT INTO USERACTION(ACTION_NAME) VALUES
-("Login"),
-("Logout"),
-("Changed info");
+INSERT INTO ROLE(ROLE_ID, ROLE_NAME) VALUES
+(1, "Admin"),
+(2, "Librarian"),
+(3, "User"),
+(4, "Guess");
 
-INSERT INTO BOOKACTION(ACTION_NAME) VALUES
-("Uploaded"),
-("Downloaded"),
-("Added_favorite"),
-("Approved"),
-("Rejected"),
-("Edited"),
-("Viewed");
+INSERT INTO USERACTION(ACTION_ID, ACTION_NAME) VALUES
+(1, "Login"),
+(2, "Logout"),
+(3, "Changed info");
 
-select * from USER
+INSERT INTO BOOKACTION(ACTION_ID, ACTION_NAME) VALUES
+(1, "Uploaded"),
+(2, "Downloaded"),
+(3, "Added_favorite"),
+(4, "Approved"),
+(5, "Rejected"),
+(6, "Edited"),
+(7, "Viewed");
+
+INSERT INTO USER(USER_NAME,USER_PASSWORD,USER_SALT,USER_EMAIL,USER_FULLNAME,USER_ADDRESS,USER_PHONE, USER_ROLE) VALUES ("Guess","Guess","Guess","Guess","Guess","Guess","Guess",4);
+
+select * from USER;
+select BOOK.*, COUNT FROM BOOK 
+LEFT JOIN (select BOOKLOG.BOOK_ID from BOOKLOG)
+on BOOK.BOOK_ID = BOOK_ID;
+
+-- 
+-- SET FOREIGN_KEY_CHECKS = 0;
+-- 
+-- DROP TABLE IF EXISTS BOOK;
+-- DROP TABLE IF EXISTS BOOKACTION;
+-- DROP TABLE IF EXISTS BOOKLOG;
+-- DROP TABLE IF EXISTS CATEGORY;
+-- DROP TABLE IF EXISTS ROLE;
+-- DROP TABLE IF EXISTS STATUS;
+-- DROP TABLE IF EXISTS USER;
+-- DROP TABLE IF EXISTS USERACTION;
+-- DROP TABLE IF EXISTS USERLOG;
+-- SET FOREIGN_KEY_CHECKS = 1
+-- 
+
+
+CREATE TEMPORARY TABLE IF NOT EXISTS VIEWCOUNT AS 
+(SELECT BOOK_ID, COUNT(LOG_ID) as COUNT 
+FROM BOOKLOG 
+where ACTION_ID=7
+group by BOOK_ID);
+
+SELECT BOOK.*, VIEWCOUNT.COUNT as VIEWS
+FROM 
+BOOK LEFT JOIN VIEWCOUNT 
+ON BOOK.BOOK_ID = VIEWCOUNT.BOOK_ID;
+
+DROP TABLE VIEWCOUNT;
+
+SELECT BOOK.* FROM 
+BOOK 
+LEFT JOIN BOOKLOG
+ON BOOK.BOOK_ID = BOOKLOG.BOOK_ID
+WHERE USER_ID = 1

@@ -20,15 +20,21 @@ router.post('/users/login', passport.authenticate('local', {
 	session: false
 }), ctrlUser.afterLogin);
 		
-router.put('/users/:userId', auth, ctrlUser.updateUser)
-router.put('/users/:userId/password', auth, ctrlUser.updatePassword)
+router.get('/users', auth, ctrlUser.findAll);
+router.put('/users/:userId', auth, ctrlUser.updateUser);
+router.put('/users/:userId/password', auth, ctrlUser.updatePassword);
 
 router.post('/books', auth, ctrlBook.create);
+router.post('/books/:bookId/approve', auth, ctrlBook.approve);
+router.put('/books/:bookId/reject', auth, ctrlBook.reject);
+
+router.get('/librarian/books', auth, ctrlBook.librarianFind);
 router.get('/books', ctrlBook.find);
 router.get('/books/:bookId', ctrlBook.findOne);
+
 router.get('/books/:bookId/viewed', ctrlBook.countView);
 router.get('/download/img/:name', ctrlBook.downloadImg);
-router.get('/download/demo/:name', ctrlBook.downloadPdf);
+router.get('/download/demo/:name', ctrlBook.downloadDemo);
 router.get('/download/pdf/:name', auth, ctrlBook.downloadPdf);
 
 
