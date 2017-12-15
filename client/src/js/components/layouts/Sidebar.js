@@ -1,35 +1,78 @@
 import React, {Component} from 'react';
+import PropTypes, { object, array } from 'prop-types';
+import { isEmpty } from "lodash";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import {
+  getAllBooks,  
+} from "../../actions";
 
+import { Link } from "react-router-dom";
+import { BASE_URL } from "../../api";
 import BoxContain from '../common/BoxContain';
 
 function MediaBook(props){
   return(
     <div className="media">
       <div className="media-left pull-left">
-        <img src="http://africanleadership.co.uk/wp-content/uploads/2017/06/a-book-a-week-image.jpg" className="media-object" style={{width:"60px"}} />
+        <img src={`${BASE_URL + props.book.FIRST_PAGE_URL}`} className="media-object" style={{width:"60px", height: "60px"}} />
       </div>
       <div className="media-body">
-        <h4 className="media-heading"><a href="">React vs Node</a></h4>
-        <p className = "text-muted">5/20/2017</p>
+        <h4 className="media-heading"><Link to={`/book/${props.book.BOOK_ID}`}>{props.book.BOOK_NAME}</Link></h4>
+        <p className = "text-muted"><i className="fa fa-eye" aria-hidden="true"></i> {props.book.COUNT ? props.book.COUNT : 0}</p>
       </div>
     </div>
   )
 }
+MediaBook.PropTypes = {
+  book: object,
+}
+MediaBook.defaultProps = {
+  book: {},
+}
 
 class MostViewBooks extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+  }
+
   render(){
     return(
       <BoxContain name = "Sách xem nhiều nhất">
-        <MediaBook />
-        <MediaBook />
-        <MediaBook />
-        <MediaBook />
+        {
+          this.props.topBooks.map(book => (
+            <MediaBook key={book.BOOK_ID} book={book} />
+          ))
+        }  
+        {
+          isEmpty(this.props.topBooks) && 
+          <div className="text-center">
+            <i className="fa fa-refresh fa-spin loader-small"></i>
+          </div>
+        }
       </BoxContain>
     )
   }
 }
 
+MostViewBooks.PropTypes = {
+  topBooks: array,
+}
+MostViewBooks.defaultProps = {
+  topBooks: [],
+}
+
 class RecentActivity extends Component {
+  constructor(props) {
+    super(props);
+    
+  }
+
+  componentWillMount() {
+  }
   render(){
     return (
       <BoxContain name = "Hoạt động gần đây">
@@ -43,13 +86,58 @@ class RecentActivity extends Component {
 }
 
 class Sidebar extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      topBooks: [],
+    }
+  }
+
+  async componentWillReceiveProps(nextProps) {
+    if (nextProps.books.allBooks === undefined) {
+      this.props.getAllBooks();
+    } else {
+      nextProps.books.allBooks.forEach(book => {
+        if (nextProps.books.bookId && book.BOOK_ID === nextProps.books.bookId.BOOK_ID) {
+          if (book.COUNT !== nextProps.books.bookId.COUNT) {
+            this.props.getAllBooks();
+          }
+        }
+      })
+      const allBookOrder = [...nextProps.books.allBooks];
+      allBookOrder.sort((a, b) => {
+        if (a.COUNT > b.COUNT) return -1;
+        if (a.COUNT < b.COUNT) return 1;
+        if (a.COUNT === b.COUNT) return 0;
+      });
+      this.setState({
+        topBooks: allBookOrder.length < 4 ? allBookOrder.slice(0,allBookOrder.length) : allBookOrder.slice(0, 4),
+      })
+    }
+  }
+
   render(){
     return(
       <div id = "sidebar-container">
-        <MostViewBooks />
+        <MostViewBooks
+          topBooks={this.state.topBooks}
+        />
         <RecentActivity />
       </div>
     )
   }
 }
-export default Sidebar;
+
+function mapStateToProps(state) {
+  return{
+    books: state.books,
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+    getAllBooks,
+  }, dispatch)
+}
+
+export default connect (mapStateToProps, mapDispatchToProps) (Sidebar);

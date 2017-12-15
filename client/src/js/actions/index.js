@@ -11,9 +11,28 @@ import {
   uploadFile,
   getAllBooks,
   getCatBooks,
-  getInfoBook
+  getBookId,
+  getViewBookId,
+  getTopBookView,
+  onDowloadBook,
+  getAllBooksByLibrarian
 } from "./file";
+
+import {
+  saveUrlTmp,
+} from "./urlTmp";
+
+import {
+  getAllInfoFaculty,
+} from "./faculty";
+
+import {
+  dispatchScreenWaiting,
+} from "./common";
 export {
+  //Common
+  dispatchScreenWaiting,
+  //Users
   onLoginUser,
   onLogoutUser,
   onRegisterUser,
@@ -24,5 +43,13 @@ export {
   uploadFile,
   getAllBooks,
   getCatBooks,
-  getInfoBook
+  getBookId,
+  getViewBookId,
+  getTopBookView,
+  onDowloadBook,
+  getAllBooksByLibrarian,
+  //Url Tmp
+  saveUrlTmp,
+  //Faculty 
+  getAllInfoFaculty,
 }

@@ -4,6 +4,7 @@ import ViewFaculty from "./ViewFaculty";
 import ViewBook from "./ViewBook";
 import Register from "./Register";
 import User from "./User";
+import App from "./App";
 
 export {
   Home,
@@ -11,5 +12,6 @@ export {
   ViewFaculty,
   ViewBook,
   Register,
-  User
+  User,
+  App
 }

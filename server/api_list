@@ -1,17 +1,29 @@
+***GET  /api/users					: get all users except admin
 POST /api/users					:	Register
 POST /api/users/login			:	Login
 PUT	/api/users/:id				: 	Change info
 PUT	/api/users/:id/password		: 	
 
 GET /api/books								:	Get all books
+GET /api/books?name=name 					:	Get all books by name
 GET /api/books?categoryId=1					:	GET books by cateogry
-GET /api/books?userId=1&action=created		: 	GEt created books by user
+GET /api/books?userId=1&action=uploaded		: 	GEt created books by user
+GET /api/books?userId=1&action=downloaded		: 	GEt created books by user
+
 GET /api/books/:id
+GET /api/books/:id/viewed					: 	GET count view of the book
+
 GET /api/download/img/{img_name}			:	get first page of the book in jpeg format
 GET /api/download/demo/{pdf_file}			:	get first page of the book in pdf format
-* GET /api/download/pdf/{pdf_file}			:	get the book in pdf format
-** PUT /api/books/:id/status				: 	change status of book (approve, reject)
+* GET /api/download/pdf/{pdf_file}?userId=1&bookId=1			:	get the book in pdf format
 * POST /api/books							:	create new book
+
+
+** GET /api/librarian/books					: 	GET BOOKS BY LIBRARIAN
+** PUT /api/books/:id/approvce				
+** PUT /api/books/:id/reject
+
+
 
 GET /api/categories							: 	Get all categories
 
@@ -24,3 +36,4 @@ GET /api/categories							: 	Get all categories
 Note: 
 -	* means that the api requires user authentication
 -	** means that the api requires librarian authentication
+-	*** means that the api requires admin authentication

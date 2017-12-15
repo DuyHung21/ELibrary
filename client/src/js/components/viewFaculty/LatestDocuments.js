@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {CoverBook} from '../common';
+import { isEmpty } from "lodash";
 
 class LatestDocuments extends Component {
   constructor(props) {
@@ -23,6 +24,12 @@ class LatestDocuments extends Component {
                 </div>
               )
             })
+          }
+          {
+            isEmpty(this.props.books) &&
+            <div className="text-center">
+              <i className="fa fa-refresh fa-spin loader-small"></i>
+            </div>
           }
           </div>
         </div>

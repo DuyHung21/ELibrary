@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 import {RegisterContent} from "../components"
+import { Header, Menu, Footer } from '../components/layouts';
 
 import {onLoginUser, onLogoutUser, onRegisterUser} from "../actions";
 
@@ -31,17 +32,24 @@ class Register extends Component {
 
   render(){
     return(
-      <RegisterContent
-        userActive={this.props.userActive}
-        onRegister={this.handleRegister}
-      />
+      <div>
+        <Header />
+        <Menu />
+        <RegisterContent
+          userActive={this.props.userActive}
+          onRegister={this.handleRegister}
+        />
+        <Footer />
+      </div>
+      
     )
   }
 }
 
 function mapStateToProps(state) {
   return{
-    userActive: state.userActive
+    userActive: state.userActive,
+    faculties: state.faculties
   }
 }
 

@@ -8,10 +8,12 @@ import {
   onLogoutUser,
   onUpdateUser,
   onChangePass,
-  uploadFile
+  uploadFile,
+  dispatchScreenWaiting,
+  getAllBooksByLibrarian
 } from "../actions";
 import { Header, Menu, Footer } from "../components/layouts";
-import { UserControl } from "../components";
+import { UserControl } from "../components/users";
 class User extends Component {
   constructor(props){
     super(props);
@@ -23,45 +25,67 @@ class User extends Component {
     this.handleUploadFile = this.handleUploadFile.bind(this);
   }
 
+  componentWillMount() {
+    if (this.props.userActive.role === 2) {
+      this.props.getAllBooksByLibrarian();
+    }
+  }
+
   async handleUpdate(user) {
-    
     try {
+      this.props.dispatchScreenWaiting(true);
       await this.props.onUpdateUser(user);
-      alert("Update Successful");
+      this.props.dispatchScreenWaiting(false);
+      alert("Updated successful");
     } catch(er) {
+      this.props.dispatchScreenWaiting(false);
       alert("Errors update");
     }
   }
 
   async handleChangePass(infoPass) {
     try {
+      this.props.dispatchScreenWaiting(true);
       await this.props.onChangePass(infoPass);
+      this.props.dispatchScreenWaiting(false);
       this.props.onLogoutUser();
     } catch(er) {
+      this.props.dispatchScreenWaiting(false);
       alert("Errors update");
     }
   }
 
   async handleUploadFile(uploadFile) {
+    this.props.dispatchScreenWaiting(true);
     this.setState({
       isLoadingUpload: true,
     })
     try {
       await this.props.uploadFile(uploadFile);
+      this.props.dispatchScreenWaiting(false);
       this.setState({
         isLoadingUpload: false,
       })
+      this.props.history.push("/home");
     } catch(er) {
+      this.props.dispatchScreenWaiting(false);
       this.setState({
         isLoadingUpload: false,
       })
+      alert("Upload File Error!");
     }
   }
   
   render(){
     return(
       <div className="user-management">
-        <Header userActive={this.props.userActive}/>
+        {
+          this.props.isLoadingScreen &&
+          <div className="screen-waiting">
+            <i className="fa fa-refresh fa-spin"></i>
+          </div>
+        }
+        <Header />
         <Menu />
         <UserControl
           userActive={this.props.userActive}
@@ -69,6 +93,7 @@ class User extends Component {
           onChangePass={this.handleChangePass}
           onUploadFile={this.handleUploadFile}
           isLoadingUpload={this.state.isLoadingUpload}
+          allBooksForLibrarian={this.props.allBooksForLibrarian}
         />
         <Footer />
       </div>
@@ -78,7 +103,9 @@ class User extends Component {
 
 function mapStateToProps(state) {
   return{
-    userActive: state.userActive
+    userActive: state.userActive,
+    isLoadingScreen: state.isLoadingScreen,
+    allBooksForLibrarian: state.books.allBooksForLibrarian,
   }
 }
 
@@ -88,7 +115,9 @@ function mapDispatchToProps(dispatch){
     onLogoutUser,
     onUpdateUser,
     onChangePass,
-    uploadFile
+    uploadFile,
+    dispatchScreenWaiting,
+    getAllBooksByLibrarian
   }, dispatch)
 }
 

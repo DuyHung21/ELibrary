@@ -2,11 +2,6 @@ import React, {Component} from 'react';
 
 import $ from "jquery";
 
-import Header from './layouts/Header';
-import Menu from './layouts/Menu';
-import Footer from './layouts/Footer';
-
-
 const FormSignUp = props => {
   return(
     <div className="FormSignUp-content">
@@ -110,15 +105,10 @@ class RegisterContent extends Component {
 
   render(){
     return(
-      <div>
-        <Header userActive={this.props.userActive}/>
-        <Menu />
-        <div id = "register-container">
-          <div className = "container">
-            <FormSignUp onSubmit={this.handleSubmit} onChange={this.handleChange}/>
-          </div>
+      <div id = "register-container">
+        <div className = "container">
+          <FormSignUp onSubmit={this.handleSubmit} onChange={this.handleChange}/>
         </div>
-        <Footer />
       </div>
     )
   }

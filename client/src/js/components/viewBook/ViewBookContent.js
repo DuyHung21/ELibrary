@@ -1,4 +1,7 @@
 import React, {Component} from "react";
+import PropTypes, { object } from 'prop-types';
+import { isEmpty } from "lodash";
+
 import { BookCard, BookCardMini } from "../common";
 import { ViewBookFrame } from "./index";
 // import {LatestDocuments, AllDocuments} from "./index";
@@ -8,12 +11,21 @@ class ViewBookContent extends Component {
     super(props);
   }
 
+  componentWillReceiveProps(nextProps) {
+    // console.log(nextProps);
+  }
+
   render(){
     return (
       <div id="ViewBook-container">
-        <BookCard />
+        <BookCard
+          book={this.props.book}
+        />
         <hr/>
-        <ViewBookFrame />
+        <ViewBookFrame
+          urlDemoBook={this.props.book.DEMO_URL}
+          onDownload={this.props.onDownload}
+        />
         <hr/>
         <BookCardMini />
       </div>
@@ -21,4 +33,10 @@ class ViewBookContent extends Component {
   }
 }
 
+ViewBookContent.PropTypes = {
+  book: object,
+}
+ViewBookContent.defaultProps = {
+  book: {},
+}
 export default ViewBookContent;

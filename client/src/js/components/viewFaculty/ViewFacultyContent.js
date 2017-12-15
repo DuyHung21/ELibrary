@@ -10,7 +10,7 @@ class ViewFacultyContent extends Component {
   render(){
     return (
       <div>
-        <LatestDocuments title="Tài liệu mới nhất" />
+        <LatestDocuments books={this.props.books} title="Tài liệu mới nhất" />
         <AllDocuments />        
 
       </div>

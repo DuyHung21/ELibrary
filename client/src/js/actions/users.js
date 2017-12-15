@@ -51,7 +51,7 @@ export const onRegisterUser = (user) =>{
 export const onUpdateUser = (user) => {
   return dispatch => {
     const curUser = JSON.parse(localStorage.getItem("dataUser"));
-    return request().put(`/api/users/${curUser.id}`, {...user}).then(res=>{
+    return request().put(`/users/${curUser.id}`, {...user}).then(res=>{
       const token = res.data.token;
       localStorage.setItem("token", token);
       const curUser = window.atob(token.split(".")[1]);
@@ -67,7 +67,7 @@ export const onUpdateUser = (user) => {
 export const onChangePass = (infoPass) => {
   return dispatch => {
     const curUser = JSON.parse(localStorage.getItem("dataUser"));
-    return request().put(`/api/users/${curUser.id}/password`, {...infoPass}).then(res=>{
+    return request().put(`/users/${curUser.id}/password`, {...infoPass}).then(res=>{
       const token = res.data.token;
       localStorage.setItem("token", token);
       const curUser = window.atob(token.split(".")[1]);

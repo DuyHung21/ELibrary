@@ -1,9 +1,5 @@
 import React, {Component} from 'react';
 
-import Header from './layouts/Header';
-import Menu from './layouts/Menu';
-import Footer from './layouts/Footer';
-
 class LoginContent extends Component {
   constructor(props){
     super(props);
@@ -35,34 +31,29 @@ class LoginContent extends Component {
 
   render(){
     return(
-      <div id = "login-content">
-        <Header userActive={this.props.userActive}/>
-        <Menu />
-        <div id = "login-container">
-          <div className = "container">
-            <div id="login-form" className = "col-md-4 col-md-offset-4">
-              {this.state.isLoading?<div id="loading-line"></div>:null}
-              <form onSubmit={this.onLoginUser}>
-                <h4>Please login to continue ...</h4>
-                {
-                  this.state.errors ? <h5 className="text-danger"> *  {this.state.errors}</h5> : null
-                }
-                <div className="form-group">
-                  <input type="username" placeholder="Username" className="form-control" ref={input=>this.usernameIp = input} />
-                </div>
-    
-                <div className="form-group">
-                  <input type="password" placeholder="Password" className="form-control" ref={input=>this.passwordIp = input} />
-                </div>
+      <div id = "login-container">
+        <div className = "container">
+          <div id="login-form" className = "col-md-4 col-md-offset-4">
+            {this.state.isLoading?<div className="loading-line"></div>:null}
+            <form onSubmit={this.onLoginUser}>
+              <h4>Please login to continue ...</h4>
+              {
+                this.state.errors ? <h5 className="text-danger"> *  {this.state.errors}</h5> : null
+              }
+              <div className="form-group">
+                <input type="username" placeholder="Username" className="form-control" ref={input=>this.usernameIp = input} />
+              </div>
+  
+              <div className="form-group">
+                <input type="password" placeholder="Password" className="form-control" ref={input=>this.passwordIp = input} />
+              </div>
 
-                <div className="form-group">
-                  <input type="submit" value="Login" className="btn btn-main" />
-                </div>
-              </form>
-            </div>
+              <div className="form-group">
+                <input type="submit" value="Login" className="btn btn-main" />
+              </div>
+            </form>
           </div>
         </div>
-        <Footer />
       </div>
     )
   }

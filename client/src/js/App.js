@@ -1,4 +1,6 @@
 import React, { Component, PropTypes } from 'react';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 import {
   BrowserRouter,
   Route,
@@ -6,14 +8,18 @@ import {
   Redirect
 } from 'react-router-dom';
 
-import { Home, Login , ViewFaculty, Register, User} from './containers';
+import {
+  onCheckAuth,
+  getAllInfoFaculty
+} from "./actions";
+
+import { App, Home, Login , ViewFaculty, Register, User} from './containers';
 /*Admin*/
 import {LoginAdmin, Dashboard} from './containers/admin';
 
 import AuthRoute from './components/AuthRoute';
 import AuthAdminRoute from './components/admin/AuthAdminRoute';
-class App extends Component {
-
+class AppIndex extends Component {
   render() {
     return (
       <BrowserRouter>
@@ -24,7 +30,7 @@ class App extends Component {
             <Route exact path = "/admin/login" component = {LoginAdmin} />
             <AuthAdminRoute path = "/admin" component = {Dashboard} />
             <AuthRoute path="/user" component={User}/>
-            <Route path = "/" component = {Home} />
+            <Route path = "/" component = {App} />
           </Switch>
         </div>
       </BrowserRouter>
@@ -32,4 +38,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default AppIndex;

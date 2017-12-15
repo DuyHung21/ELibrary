@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { isEmpty } from "lodash";
 
 import Header from './layouts/Header';
 import Footer from './layouts/Footer';
@@ -46,9 +47,7 @@ class HomeContent extends Component {
           }
         })
       });
-      // console.log(this.state.catBook);
     }
-    
   }
 
   render(){
@@ -60,9 +59,15 @@ class HomeContent extends Component {
         {
           Object.keys(this.state.catBook).map(key => {
             return (
-              <LatestDocuments key={key} books={this.state.catBook[key]} title = "Khoa công nghệ thông tin" />
+              <LatestDocuments key={key} books={this.state.catBook[key]} title = {this.props.nameFacutly[key]} />
             )
           })
+        }
+        {
+          isEmpty(this.state.catBook) &&
+          <div className="text-center">
+            <i className="fa fa-refresh fa-spin loader-big"></i>
+          </div>
         }
       </div>
     )

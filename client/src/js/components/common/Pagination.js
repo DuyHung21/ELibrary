@@ -1,4 +1,5 @@
 import React , {Component} from "react";
+import PropTypes, { func } from 'prop-types';
 
 class Pagination extends Component {
   render(){
@@ -27,6 +28,12 @@ class Pagination extends Component {
       </div>
     )
   }
+}
+Pagination.PropTypes = {
+  onMovePage: func,
+}
+Pagination.defaultProps = {
+  onMovePage: () => {}
 }
 
 export default Pagination;

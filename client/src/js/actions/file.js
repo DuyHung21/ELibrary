@@ -1,5 +1,6 @@
 import { request, BASE_URL } from "../api"
 import axios from "axios";
+import { isEmpty } from "lodash";
 
 export const uploadFile = uploadFile => {
   return dispatch => {
@@ -18,7 +19,6 @@ export const getAllBooks = () => {
         type: "GET_ALL_BOOK",
         payload: res.data
       })
-      // console.log(res);
     })
   }
 }
@@ -32,11 +32,59 @@ export const getCatBooks = (obj) => {
   }
 }
 
-export const getInfoBook = id => {
+export const getBookId = id => {
   return dispatch => {
-    return request().get("/api/books", {id})
+    return request().get(`/api/books/${id}`, {id})
     .then(res => {
-      console.log(res);
+      const book = res.data;
+      request().get(`/api/books/${id}/viewed`, {id})
+      .then(res => {
+        dispatch({
+          type: "GET_BOOK_ID",
+          payload: { ...book, ...res.data } 
+        })
+      })
     })
   }
 }
+
+export const getViewBookId = id => {
+  return dispatch => {
+    return request().get(`/api/books/${id}/viewed`, {id})
+    .then(res => {
+      console.log(res.data);
+    })
+  }
+}
+
+export const onDowloadBook = (preState) => {
+  return (dispatch, getState) => {
+    const state = getState();
+    const linkDownload = `${state.books.bookId.BOOK_URL}?bookId=${state.books.bookId.BOOK_ID}`;
+    return request().get(linkDownload, {
+      responseType: 'blob'
+    })
+    .then(res => {
+      console.log(res.data);
+      const url = URL.createObjectURL(res.data);
+      window.open(url, "_blank");
+    })
+  }
+}
+
+export const getAllBooksByLibrarian = () => {
+  return dispatch => {
+    return request().get("/api/librarian/books")
+    .then(res => {
+      dispatch({
+        type: "GET_ALL_BOOK_BY_LIBRARIAN",
+        payload: res.data
+      })
+    })
+  }
+}
+
+request().get("/api/books?userId=1&action=uploaded")
+.then(res=>{
+  console.log(res);
+})
