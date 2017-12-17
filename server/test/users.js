@@ -8,6 +8,7 @@ const chaiHttp = require('chai-http');
 const should = chai.should();
 const expect = chai.expect;
 const assert = chai.assert;
+const User = require('../app_api/controller/users');
 
 chai.use(chaiHttp);
 
@@ -86,16 +87,48 @@ const _endConnection = (connection, cb) => {
 	cb();
 } 
 
+const _createLibrarian = (cb)=> {
+	const librarian_default = {
+		username: "librarian",
+		password: "librarian",
+		email: "librarian@librarian.com",
+		fullname: "librarian",
+		role: 2
+	}
+
+	User._create(librarian_default, (err, result)=> {
+		cb(err, result)
+	})
+
+}
+
+const _createAdmin = (cb)=> {
+	const admin_default = {
+		username: "admin",
+		password: "admin",
+		email: "admin@admin.com",
+		fullname: "admin",
+		role: 1
+	}
+
+	User._create(admin_default, (err, result)=> {
+		cb(err, result)
+	})
+
+}
+
+
 describe('User', () => {
 	before((done) => {
 		//Clear user db
 		_resetUserDatabase(() => {
-			done();
+				done();
+
 		})
 	})
 
 	describe('Register', () => {
-		it ('It should register sucessfully', (done) => {
+		it ('It should register user sucessfully', (done) => {
 			let user = {
 				username: 'test',
 				password: 'test',
@@ -113,6 +146,21 @@ describe('User', () => {
 					done();
 				})
 		});
+
+		it ("It should create librarian successfully", (done)=> {
+			_createLibrarian((er, res)=> {
+				console.log(er);
+				done();
+			})
+
+		})
+
+		it ("It should create admin successfully", (done)=> {
+			_createAdmin((err, res)=> {
+				console.log(err);
+				done();
+			})
+		})
 
 		it ('It should throw error due to duplicate username', (done) => {
 			let user = {
@@ -188,7 +236,7 @@ describe('User', () => {
 						email: 'test'
 					}
 					chai.request(server)
-						.put('/api/users/1')
+						.post('/api/users/1')
 						.set('Authorization', 'Bearer ' + res.body.token)
 						.type('form')
 						.send(user)
@@ -224,7 +272,7 @@ describe('User', () => {
 						newPassword: 'test'
 					}
 					chai.request(server)
-						.put('/api/users/1/password')
+						.post('/api/users/1/password')
 						.set('Authorization', 'Bearer ' + res.body.token)
 						.type('form')
 						.send(newPass)
@@ -235,6 +283,41 @@ describe('User', () => {
 						})
 				})
 
+		})
+	})
+
+	describe("Load all user", ()=> {
+		it("It should be denied", (done)=> {
+			chai.request(server)
+				.get('/api/users')
+				.end((error, res)=> {
+					res.should.have.status(401);
+					done()
+				})
+		})
+
+
+		it ("It should success", (done)=> {
+			let adminForm = {
+				username: 'admin',
+				password: 'admin'
+			}
+			let admin_token;
+			chai.request(server)
+				.post('/api/users/login')
+				.type('form')
+				.send(adminForm)
+				.end((error, res)=> {
+					admin_token = res.body.token;
+					chai.request(server)
+						.get('/api/users')
+						.set('Authorization', 'Bearer ' + admin_token)
+						.end((error, res)=> {
+							res.should.have.status(200);
+							expect(res.body.length).to.not.equal(0);
+							done();
+						})
+				})
 		})
 	})
 

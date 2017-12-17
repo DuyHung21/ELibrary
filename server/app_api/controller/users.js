@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 const db = require('../model/db');
-const ROLES = require('./enums').USER_ROLE;
+const USER_ROLE = require('./enums').USER_ROLE;
 const algorithm = 'sha1';
 
 
@@ -24,7 +24,6 @@ const register = (req, res) => {
 		res.status(400).json("Username, password, email and fullname are required");
 		return;
 	} 
-	console.log(req.body)
 
 	_create(req.body, (error, results)=> {
 		    			// Handle error after the release.
@@ -40,7 +39,7 @@ const register = (req, res) => {
     			USER_FULLNAME: req.body.fullname,
    				USER_ADDRESS: req.body.address,
     			USER_PHONE: req.body.phone,
-    			USER_ROLE: ROLES.USER
+    			USER_ROLE: USER_ROLE.USER
     		}); 
     		res
     			.status(201)
@@ -59,17 +58,76 @@ const afterLogin = (req, res) => {
 	});
 }
 
+const findAll = (req, res)=> {
+	const user = req.payload;
+
+	if (user.role != USER_ROLE.ADMIN) {
+		res.status(401).json("Permission Denied");
+	}
+	else {
+		db.getConnection((err, connection) => {
+			let queryStatement = 'SELECT * FROM USER WHERE USER_ROLE=?';
+		  	// Use the connection
+
+	  		connection.query(queryStatement,
+	  			[USER_ROLE.ADMIN], 
+	  			(error, results, fields) => {
+	    			// And done with the connection.
+	    			connection.release();
+
+	    			if (error) {
+	    				res.status(500).json(error)
+	    			} else {
+	    				res.status(200).json(results);
+	    			}
+	    			// Don't use the connection here, it has been returned to the pool.
+	  			});
+		});
+	}
+}
+
+const deleteUser = (req, res)=> {
+	const user = req.payload;
+
+	if (user.role != USER_ROLE.ADMIN) {
+		res.status(401).json("Permission Denied");
+		return;
+	}
+	else {
+		db.getConnection((err, connection) => {
+			let queryStatement = 'DELETE FROM USER WHERE USER_ID=?';
+		  	// Use the connection
+
+	  		connection.query(queryStatement,
+	  			[req.query.userId], 
+	  			(error, results, fields) => {
+	    			// And done with the connection.
+	    			connection.release();
+
+	    			if (error) {
+	    				res.status(500).json(error)
+	    			} else {
+	    				res.status(200).json(results);
+	    			}
+	    			// Don't use the connection here, it has been returned to the pool.
+	  			});
+		});
+	}
+
+}
+
+
 const _generateJwt = (user) => {
 	let expiry = new Date();
 	let timeLive;
 	switch(user.USER_ROLE) {
-		case ROLES.ADMIN:
+		case USER_ROLE.ADMIN:
 			timeLive = 1;
 			break;
-		case ROLES.LIBRARIAN:
+		case USER_ROLE.LIBRARIAN:
 			timeLive = 7;
 			break;
-		case ROLES.USER:
+		case USER_ROLE.USER:
 			timeLive = 30;
 			break;
 	}
@@ -105,7 +163,7 @@ const _create = (user, cb)=> {
   			user.fullname,
   			user.address,
   			user.phone,
-  			user.role?user.role:ROLES.USER], 
+  			user.role?user.role:USER_ROLE.USER], 
   			(error, results, fields) => {
     			// And done with the connection.
     			connection.release();
@@ -137,50 +195,55 @@ const _findOneByUserName = (username, cb)=> {
 }
 
 const updateUser = (req, res) => {
-	db.getConnection((err, connection) => {
-		let array = []
-		let queryStatement = "UPDATE USER SET "
-		if (req.body.username) {
-			queryStatement += "USER_NAME = ?";
-			array.push(req.body.username)
-		}
-		if (req.body.email) {
-			queryStatement += ",USER_EMAIL = ?";
-			array.push(req.body.email)
-		}
-		if (req.body.fullname) {
-			queryStatement += ",USER_FULLNAME = ?";
-			array.push(req.body.fullname)
-		}
+	const user = req.payload;
+	if (user.id == req.params.userId || user.role == USER_ROLE.ADMIN) {
+		db.getConnection((err, connection) => {
+			let array = []
+			let queryStatement = "UPDATE USER SET "
+			if (req.body.username) {
+				queryStatement += "USER_NAME = ?";
+				array.push(req.body.username)
+			}
+			if (req.body.email) {
+				queryStatement += ",USER_EMAIL = ?";
+				array.push(req.body.email)
+			}
+			if (req.body.fullname) {
+				queryStatement += ",USER_FULLNAME = ?";
+				array.push(req.body.fullname)
+			}
 
-		if (req.body.phone) {
-			queryStatement += ",USER_PHONE = ? ";
-			array.push(req.body.phone)
-		}
-		queryStatement += " WHERE USER_ID = ?"
-		array.push(parseInt(req.params.userId))
-		connection.query(queryStatement, 
-			array,
-			(error, results, fields) => {
-				connection.release();
-				if (error) {
-					res.status(400).json(error)
-				} else {
-					const token = _generateJwt({
-    					USER_ID: req.params.userId,
-    					USER_EMAIL: req.body.email,
-    					USER_NAME: req.body.username,
-    					USER_FULLNAME: req.body.fullname,
-    					USER_ADDRESS: req.body.address,
-    					USER_PHONE: req.body.phone,
-    					USER_ROLE: req.body.role?req.body.role:ROLES.USER
-    				}); 
+			if (req.body.phone) {
+				queryStatement += ",USER_PHONE = ? ";
+				array.push(req.body.phone)
+			}
+			queryStatement += " WHERE USER_ID = ?"
+			array.push(parseInt(req.params.userId))
+			connection.query(queryStatement, 
+				array,
+				(error, results, fields) => {
+					connection.release();
+					if (error) {
+						res.status(400).json(error)
+					} else {
+						const token = _generateJwt({
+	    					USER_ID: req.params.userId,
+	    					USER_EMAIL: req.body.email,
+	    					USER_NAME: req.body.username,
+	    					USER_FULLNAME: req.body.fullname,
+	    					USER_ADDRESS: req.body.address,
+	    					USER_PHONE: req.body.phone,
+	    					USER_ROLE: req.body.role?req.body.role:USER_ROLE.USER
+	    				}); 
 
-					res.status(200).json({"token": token})
-				}
-			})
+						res.status(200).json({"token": token})
+					}
+				})
 
-	})
+		})
+	} else {
+		res.status(401).json("Permission denied");
+	}
 }
 
 const updatePassword = (req, res)=> {
@@ -203,7 +266,7 @@ const updatePassword = (req, res)=> {
 	    					USER_FULLNAME: user.USER_FULLNAME,
 	    					USER_ADDRESS: user.USER_ADDRESS,
 	    					USER_PHONE: user.USER_PHONE,
-	    					USER_ROLE: ROLES.USER
+	    					USER_ROLE: USER_ROLE.USER
 
 						}) 
 
@@ -214,6 +277,7 @@ const updatePassword = (req, res)=> {
 		} 
 	})
 }
+
 
 
 const _setPassword =(password)=> {
@@ -252,9 +316,12 @@ _create(librarian_default, (error, results)=> {})
 _create(admin_default, (error, results)=>{})
 
 module.exports = {
+	_create,
+	findAll: findAll,
 	afterLogin,
 	register,
 	validateUser,
 	updateUser,
-	updatePassword
+	updatePassword,
+	deleteUser
 };

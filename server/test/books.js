@@ -14,6 +14,7 @@ const expect = chai.expect;
 const assert = chai.assert;
 
 const Book = require('../app_api/controller/books');
+const User = require('../app_api/controller/users');
 const BookLog = require('../app_api/controller/booklogs');
 
 const bookuploadDir = path.resolve('../upload');
@@ -186,11 +187,71 @@ describe('Books', () => {
 		})
 	});
 
+	describe('Get waiting book', ()=> {
+		it ("It should get 1 book", (done)=> {
+			let librarian = {
+				username: 'librarian',
+				password: 'librarian'
+			}
+			chai.request(server)
+				.post('/api/users/login')
+				.type('form')
+				.send(librarian)
+				.end((err, res)=> {
+					let lib_token = res.body.token;
+					chai.request(server)
+						.get("/api/librarian/books")
+						.set('Authorization', 'Bearer ' + lib_token)
+						.end((err, res)=> {
+							res.should.have.status(200);
+							expect(res.body.length).to.equal(1);
+							done();
+						})
+
+				})
+		})
+	})
+
+	describe('Approve book', ()=> {
+		it("It should not allow", (done)=> {
+			chai.request(server)
+				.post("/api/books/1/approve")
+				.set('Authorization', 'Bearer ' + token)
+				.end((err, res)=> {
+					res.should.have.status(401);
+					done();
+				})
+		})
+
+		it ("It should be allowed", (done)=> {
+			let librarian = {
+				username: 'librarian',
+				password: 'librarian'
+			}
+			chai.request(server)
+				.post('/api/users/login')
+				.type('form')
+				.send(librarian)
+				.end((err, res)=> {
+					let lib_token = res.body.token;
+					chai.request(server)
+						.post("/api/books/1/approve")
+						.set('Authorization', 'Bearer ' + lib_token)
+						.end((err, res)=> {
+							res.should.have.status(200);
+							done();
+						})
+
+				})
+		})
+	})
+
 	describe('Get all books', ()=> {
-		it("It should get suceessfully and return 1 book", (done)=> {
+		it("It should get all suceessfully and return 1 book", (done)=> {
 			chai.request(server)
 				.get("/api/books")
 				.end((err, res)=> {
+					res.body[0].should.have.property("COUNT")
 					res.should.have.status(200);
 					done();
 				})
@@ -204,6 +265,16 @@ describe('Books', () => {
 				.get('/api/books/1')
 				.end((err, res)=> {
 					res.should.have.status(200);
+					done();
+				})
+		})
+
+		it ("It should fild by category 1 successfully and return 1 book", (done)=> {
+			chai.request(server)
+				.get('/api/books?categoryId=1')
+				.end((err, res)=> {
+					res.should.have.status(200);
+					expect(res.body.length).to.equal(1);
 					done();
 				})
 		})
@@ -225,6 +296,7 @@ describe('Books', () => {
 				.end((err, res)=> {
 					res.should.have.status(200);
 					res.body.should.have.property('FIRST_PAGE_URL');
+					console.log(res.body.FIRST_PAGE_URL)
 					chai.request(server)
 						.get(res.body.FIRST_PAGE_URL)
 						.end((err, res)=> {
@@ -274,7 +346,7 @@ describe('Books', () => {
 					res.should.have.status(200);
 					res.body.should.have.property('BOOK_URL');					
 					chai.request(server)
-						.get(res.body.BOOK_URL)
+						.get(res.body.BOOK_URL+"?userId=1&bookId=1")
 						.set('Authorization', 'Bearer '+ token)						
 						.end((err, res)=> {
 							res.should.have.status(200);
@@ -283,9 +355,52 @@ describe('Books', () => {
 				})
 		})
 
-
-
 	})
+
+	describe('Get book by name', ()=> {
+		it("It should get one book", (done)=> {
+			chai.request(server)
+				.get("/api/books?name=test")
+				.end((err, res)=> {
+					res.should.have.status(200);
+					expect(res.body.length).to.equal(1);
+					done();
+				})
+		})
+
+		it("It should get 0 book", (done)=> {
+			chai.request(server)
+				.get("/api/books?name=a")
+				.end((err, res)=> {
+					res.should.have.status(200);
+					expect(res.body.length).to.equal(0);
+					done();
+				})
+		})
+	})
+
+	describe('Get book by user', ()=> {
+		it("It should get one downloaded book", (done)=> {
+			chai.request(server)
+				.get("/api/books?userId=1&action=downloaded")
+				.end((err, res)=> {
+					res.should.have.status(200);
+					expect(res.body.length).to.equal(1);
+					done();
+				})
+		})
+
+		it("It should get one uploaded book", (done)=> {
+			chai.request(server)
+				.get("/api/books?userId=1&action=uploaded")
+				.end((err, res)=> {
+					res.should.have.status(200);
+					expect(res.body.length).to.equal(1);
+					done()
+				})
+		})
+	})
+
 
 })
 

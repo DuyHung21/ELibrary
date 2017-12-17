@@ -28,6 +28,17 @@ const _count = (bookId, actionId, cb)=> {
 	})
 }
 
+const _countAll = (actionId, cb)=> {
+	let statement = "SELECT COUNT(LOG_ID) AS COUNT FROM BOOKLOG WHERE ACTION_ID = ?";
+	db.getConnection((err, connection)=> {
+		connection.query(statement, [bookId, actionId], (error, results, fields)=> {
+			connection.release();
+			cb(error, results[0]);
+		})
+	})
+
+}
+
 
 
 const findOne = (req, res) => {
@@ -91,6 +102,11 @@ const countViewedLog = (bookId, cb) => {
 	_count(bookId, BOOK_ACTIONS.VIEWED, cb);
 }  
 
+const countDownloadedLog = (bookId, cb) => {
+	_count(bookId, BOOK_ACTIONS.DOWNLOADED, cb);
+}  
+
+
 
 
 module.exports = {
@@ -103,5 +119,6 @@ module.exports = {
 	createViewedLog,
 	findOne,
 	findByBook,
-	countViewedLog
+	countViewedLog,
+	countDownloadedLog,
 }

@@ -20,8 +20,13 @@ GET /api/download/demo/{pdf_file}			:	get first page of the book in pdf format
 
 
 ** GET /api/librarian/books					: 	GET BOOKS BY LIBRARIAN
+<<<<<<< HEAD
 ** POST /api/books/:id/approve			
 ** POST /api/books/:id/reject
+=======
+** PUT /api/books/:id/approvce				
+** PUT /api/books/:id/reject
+>>>>>>> 17f88a2f32d7e8b074b9186cc4683b5c17ff8343
 
 
 
@@ -36,4 +41,8 @@ GET /api/categories							: 	Get all categories
 Note: 
 -	* means that the api requires user authentication
 -	** means that the api requires librarian authentication
+<<<<<<< HEAD
 -	*** means that the api requires admin authentication
+=======
+-	*** means that the api requires admin authentication
+>>>>>>> 17f88a2f32d7e8b074b9186cc4683b5c17ff8343
