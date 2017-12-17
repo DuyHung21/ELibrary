@@ -236,7 +236,7 @@ describe('User', () => {
 						email: 'test'
 					}
 					chai.request(server)
-						.put('/api/users/1')
+						.post('/api/users/1')
 						.set('Authorization', 'Bearer ' + res.body.token)
 						.type('form')
 						.send(user)
@@ -272,7 +272,7 @@ describe('User', () => {
 						newPassword: 'test'
 					}
 					chai.request(server)
-						.put('/api/users/1/password')
+						.post('/api/users/1/password')
 						.set('Authorization', 'Bearer ' + res.body.token)
 						.type('form')
 						.send(newPass)

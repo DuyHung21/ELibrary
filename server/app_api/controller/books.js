@@ -13,6 +13,7 @@ const BOOK_STATUS = require('./enums.js').BOOK_STATUS;
 const USER_ROLE = require('./enums.js').USER_ROLE;
 const Dropbox = require('dropbox');
 
+const Duplex = require('stream').Duplex;  
 
 let uploadFolderName;
 let uploadFolderDir;
@@ -36,7 +37,7 @@ if (process.env.NODE_ENV == 'test') {
 	demoDest = '/test/demo/';
 }
 
-const dbx = new Dropbox({ accessToken: process.env.dropbox_accesstoken });
+	const dbx = new Dropbox({ accessToken: process.env.dropbox_accesstoken });
 
 
 const GUESS = require('./enums.js').USER_GUESS
@@ -98,6 +99,7 @@ const find = (req, res) => {
 		})
 	} else if (option.name) {
 		let queryStatement = 'SELECT * from BOOK where BOOK_NAME = ? AND BOOK_STATUS = ? ';
+		if (option.categoryId) queryStatement += 'AND CATEGORY_ID = ' + option.categoryId;
 		queryStatement = _addionalOption(queryStatement, option)
 		db.getConnection((err, connection) => {
 			connection.query(queryStatement,[option.name, BOOK_STATUS.APPROVED], (error, results, fields) => {
@@ -162,7 +164,6 @@ const find = (req, res) => {
 }
 
 const librarianFind = (req, res)=> {
-	console.log(req.payload);
 	const user = req.payload;
 	if (user.role != USER_ROLE.LIBRARIAN) {
 		res.status(401).json("Permission required");
@@ -244,7 +245,7 @@ const downloadImg = (req, res) => {
 		.then((data)=> {
 			res.contentType("application/jpeg");
 			res.status(200);
-			res.send(data);
+			res.send(new Buffer(data.fileBinary, 'binary'));
 		})
 		.catch((err)=> {
 			res.status(500).json(err)
@@ -258,11 +259,10 @@ const downloadPdf = (req, res) => {
 	const book_id = req.query.bookId;
 	dbx.filesDownload({path: link})
 		.then((data)=> {
-			booklogCtrl.createDownloadedLog(book_id, req.query.userId);
-
+			booklogCtrl.createDownloadedLog(book_id, req.payload.id);
 			res.contentType("application/pdf")
 			res.status(200)
-			res.send(data)
+			res.send(new Buffer(data.fileBinary, 'binary'));
 		})
 		.catch((err)=> {
 			res.status(500).json(err)
@@ -277,7 +277,7 @@ const downloadDemo = (req, res) => {
 		.then((data)=> {
 			res.contentType("application/pdf")
 			res.status(200)
-			res.send(data)
+			res.send(new Buffer(data.fileBinary, 'binary'));
 		})
 		.catch((err)=> {
 			// console.log(err)
@@ -477,6 +477,13 @@ const _changeStatus = (bookId, statusId, cb)=> {
 			cb(error, results);
 		})
 	})
+}
+
+const _bufferToStream = (buffer)=> {  
+  let stream = new Duplex();
+  stream.push(buffer);
+  stream.push(null);
+  return stream;
 }
 
 

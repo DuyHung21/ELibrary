@@ -86,6 +86,37 @@ const findAll = (req, res)=> {
 	}
 }
 
+const deleteUser = (req, res)=> {
+	const user = req.payload;
+
+	if (user.role != USER_ROLE.ADMIN) {
+		res.status(401).json("Permission Denied");
+		return;
+	}
+	else {
+		db.getConnection((err, connection) => {
+			let queryStatement = 'DELETE FROM USER WHERE USER_ID=?';
+		  	// Use the connection
+
+	  		connection.query(queryStatement,
+	  			[req.query.userId], 
+	  			(error, results, fields) => {
+	    			// And done with the connection.
+	    			connection.release();
+
+	    			if (error) {
+	    				res.status(500).json(error)
+	    			} else {
+	    				res.status(200).json(results);
+	    			}
+	    			// Don't use the connection here, it has been returned to the pool.
+	  			});
+		});
+	}
+
+}
+
+
 const _generateJwt = (user) => {
 	let expiry = new Date();
 	let timeLive;
@@ -248,6 +279,7 @@ const updatePassword = (req, res)=> {
 }
 
 
+
 const _setPassword =(password)=> {
 	let salt =  crypto.randomBytes(16).toString('hex');
 	let hash = crypto.pbkdf2Sync(password, salt, 1000, 64, algorithm).toString('hex');
@@ -290,5 +322,6 @@ module.exports = {
 	register,
 	validateUser,
 	updateUser,
-	updatePassword
+	updatePassword,
+	deleteUser
 };

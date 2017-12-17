@@ -21,12 +21,13 @@ router.post('/users/login', passport.authenticate('local', {
 }), ctrlUser.afterLogin);
 		
 router.get('/users', auth, ctrlUser.findAll);
-router.put('/users/:userId', auth, ctrlUser.updateUser);
-router.put('/users/:userId/password', auth, ctrlUser.updatePassword);
+router.post('/users/:userId', auth, ctrlUser.updateUser);
+router.post('/users/:userId/password', auth, ctrlUser.updatePassword);
+router.post('/users/:userId/delete', auth, ctrlUser.deleteUser);
 
 router.post('/books', auth, ctrlBook.create);
 router.post('/books/:bookId/approve', auth, ctrlBook.approve);
-router.put('/books/:bookId/reject', auth, ctrlBook.reject);
+router.post('/books/:bookId/reject', auth, ctrlBook.reject);
 
 router.get('/librarian/books', auth, ctrlBook.librarianFind);
 router.get('/books', ctrlBook.find);
