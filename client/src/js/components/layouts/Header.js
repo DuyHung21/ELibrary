@@ -71,9 +71,9 @@ class Header extends Component {
                     <ul className="dropdown-menu" style={{left: "-97px"}}>
                       <li><Link to="/user"><i className="fa fa-user" aria-hidden="true"></i> Profile</Link></li>
                       <li><Link to="/user/upload"><i className="fa fa-cloud-upload" aria-hidden="true"></i> Upload Book</Link></li>
-                      <li><Link to="/user"><i className="fa fa-file" aria-hidden="true"></i> Uploaded</Link></li>
-                      <li><Link to="/user"><i className="fa fa-download" aria-hidden="true"></i> Downloaded</Link></li>
-                      <li><Link to="/user"><i className="fa fa-bookmark" aria-hidden="true"></i> Bookmarked</Link></li>
+                      <li><Link to="/user/uploaded"><i className="fa fa-file" aria-hidden="true"></i> Uploaded</Link></li>
+                      <li><Link to="/user/downloaded"><i className="fa fa-download" aria-hidden="true"></i> Downloaded</Link></li>
+                      <li><Link to="/user/bookmared"><i className="fa fa-bookmark" aria-hidden="true"></i> Bookmarked</Link></li>
                       {
                         this.props.userActive.role === 2 &&
                         <li><Link to="/user/approve"><i className="fa fa-unlock" aria-hidden="true"></i> Duyệt/Block sách</Link></li>

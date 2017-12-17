@@ -26,10 +26,10 @@ export default props => {
             <Link to="/user/upload" id="upload" onClick={props.onChangAction} ><i className="fa fa-cloud-upload" aria-hidden="true"></i> Tải lên</Link>
           </div>
           <div>
-            <Link to="/user" id="info" onClick={props.onChangAction} ><i className="fa fa-file" aria-hidden="true"></i> Danh sách uploaded</Link>
+            <Link to="/user/uploaded" id="info" onClick={props.onChangAction} ><i className="fa fa-file" aria-hidden="true"></i> Danh sách uploaded</Link>
           </div>
           <div>
-            <Link to="/user" id="info" onClick={props.onChangAction} ><i className="fa fa-cloud-download" aria-hidden="true"></i> Danh sách downloaded</Link>
+            <Link to="/user/downloaded" id="info" onClick={props.onChangAction} ><i className="fa fa-cloud-download" aria-hidden="true"></i> Danh sách downloaded</Link>
           </div>
           <div>
             <Link to="/user" id="info" onClick={props.onChangAction} ><i className="fa fa-bookmark" aria-hidden="true"></i> Danh sách đã đánh dấu</Link>

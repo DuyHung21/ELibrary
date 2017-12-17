@@ -4,9 +4,10 @@ import { Route, Link, Switch } from "react-router-dom";
 import { BoxContain } from "../common";
 import {
   ApproveBook,
+  Uploaded,
   UploadBox,
   SideBar,
-  UserInfo
+  UserInfo,
 } from "./index";
 import $ from "jquery";
 
@@ -149,6 +150,29 @@ class UserControl extends Component {
       return (
         <ApproveBook
           books={this.props.allBooksForLibrarian}
+          onApproveBook={this.props.onApproveBook}
+          onBanBook={this.props.onBanBook}
+          onGetBooks={this.props.onGetBookForLibrarians}
+        />
+      )
+    }
+
+    const uploaded = props => {
+      return (
+        <Uploaded
+          books={this.props.booksUploaded}
+          onApproveBook={this.props.onApproveBook}
+          onGetBooks={this.props.onGetBooksUploaded}
+        />
+      )
+    }
+
+    const downloaded = props => {
+      return (
+        <Uploaded
+          books={this.props.booksDownloaded}
+          onApproveBook={this.props.onApproveBook}
+          onGetBooks={this.props.onGetBooksDownloaded}
         />
       )
     }
@@ -170,6 +194,8 @@ class UserControl extends Component {
                 <Route exact path="/user" render={userInfo} />
                 <Route exact path="/user/info" render={userInfo} />
                 <Route exact path="/user/upload" render={uploadBox} />
+                <Route exact path="/user/uploaded" render={uploaded} />
+                <Route exact path="/user/downloaded" render={downloaded} />
                 <Route exact path="/user/approve" render={approveBook} />
               </Switch>
             </div>

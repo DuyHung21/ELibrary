@@ -10,12 +10,16 @@ import {
   onChangePass,
   uploadFile,
   dispatchScreenWaiting,
-  getAllBooksByLibrarian
+  getAllBooksByLibrarian,
+  approveBook,
+  banBook,
+  getBooksUploaded,
+  getBooksDownloaded,
 } from "../actions";
 import { Header, Menu, Footer } from "../components/layouts";
 import { UserControl } from "../components/users";
 class User extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       isLoadingUpload: false,
@@ -23,12 +27,6 @@ class User extends Component {
     this.handleChangePass = this.handleChangePass.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleUploadFile = this.handleUploadFile.bind(this);
-  }
-
-  componentWillMount() {
-    if (this.props.userActive.role === 2) {
-      this.props.getAllBooksByLibrarian();
-    }
   }
 
   async handleUpdate(user) {
@@ -66,7 +64,7 @@ class User extends Component {
       this.setState({
         isLoadingUpload: false,
       })
-      this.props.history.push("/home");
+      this.props.history.push("/user/uploaded");
     } catch(er) {
       this.props.dispatchScreenWaiting(false);
       this.setState({
@@ -76,7 +74,33 @@ class User extends Component {
     }
   }
   
-  render(){
+  handleApproveBook = (id) => {
+    return async () => {
+      try {
+        this.props.dispatchScreenWaiting(true);
+        await this.props.approveBook(id);
+        this.props.dispatchScreenWaiting(false);
+      } catch (er) {
+        this.props.dispatchScreenWaiting(false);
+        alert("Error Approve");
+      }
+    }
+  }
+
+  handleBanBook = id => {
+    return async () => {
+      try {
+        this.props.dispatchScreenWaiting(true);
+        await this.props.banBook(id);
+        this.props.dispatchScreenWaiting(false);
+      } catch (er) {
+        this.props.dispatchScreenWaiting(false);
+        alert("Error Approve");
+      }
+    }
+  }
+
+  render() {
     return(
       <div className="user-management">
         {
@@ -94,6 +118,13 @@ class User extends Component {
           onUploadFile={this.handleUploadFile}
           isLoadingUpload={this.state.isLoadingUpload}
           allBooksForLibrarian={this.props.allBooksForLibrarian}
+          onApproveBook={this.handleApproveBook}
+          onBanBook={this.handleBanBook}
+          onGetBookForLibrarians={this.props.getAllBooksByLibrarian}
+          onGetBooksUploaded={this.props.getBooksUploaded}
+          onGetBooksDownloaded={this.props.getBooksDownloaded}
+          booksUploaded={this.props.booksUploaded}
+          booksDownloaded={this.props.booksDownloaded}
         />
         <Footer />
       </div>
@@ -102,14 +133,16 @@ class User extends Component {
 }
 
 function mapStateToProps(state) {
-  return{
+  return {
     userActive: state.userActive,
     isLoadingScreen: state.isLoadingScreen,
     allBooksForLibrarian: state.books.allBooksForLibrarian,
+    booksUploaded: state.books.booksUploaded,
+    booksDownloaded: state.books.booksDownloaded
   }
 }
 
-function mapDispatchToProps(dispatch){
+function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     onLoginUser,
     onLogoutUser,
@@ -117,7 +150,11 @@ function mapDispatchToProps(dispatch){
     onChangePass,
     uploadFile,
     dispatchScreenWaiting,
-    getAllBooksByLibrarian
+    getAllBooksByLibrarian,
+    approveBook,
+    banBook,
+    getBooksUploaded,
+    getBooksDownloaded
   }, dispatch)
 }
 

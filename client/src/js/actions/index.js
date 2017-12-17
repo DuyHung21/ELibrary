@@ -15,7 +15,11 @@ import {
   getViewBookId,
   getTopBookView,
   onDowloadBook,
-  getAllBooksByLibrarian
+  getAllBooksByLibrarian,
+  approveBook,
+  banBook,
+  getBooksUploaded,
+  getBooksDownloaded
 } from "./file";
 
 import {
@@ -48,6 +52,10 @@ export {
   getTopBookView,
   onDowloadBook,
   getAllBooksByLibrarian,
+  approveBook,
+  banBook,
+  getBooksUploaded,
+  getBooksDownloaded,
   //Url Tmp
   saveUrlTmp,
   //Faculty 

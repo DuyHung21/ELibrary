@@ -26,6 +26,21 @@ export default (state = [], action) => {
         allBooksForLibrarian: action.payload
       }
     }
+
+    case "GET_BOOKS_UPLOADED": {
+      return {
+        ...state,
+        booksUploaded: action.payload
+      }
+    }
+
+    case "GET_BOOKS_DOWNLOADED": {
+      return {
+        ...state,
+        booksDownloaded: action.payload
+      }
+    }
+
     default: return state
   }
 }

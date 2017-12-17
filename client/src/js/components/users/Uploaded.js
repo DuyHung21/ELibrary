@@ -19,8 +19,8 @@ for(let i = 0; i < 29; i++) {
   usersShow.push({"id":i,"email":`tinh${i}.bkdn2014@gmail.com`,"username":`tinh${i}`,"fullname":`Jr tinh${i}`,"phone":`012${i}`,"role":3});
 }
 
-class ApproveBook extends Component {
-  constructor(props){
+class Uploaded extends Component {
+  constructor(props) {
     super(props);
   }
 
@@ -50,17 +50,17 @@ class ApproveBook extends Component {
                   <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{book.BOOK_NAME}</td>
-                    <td>{book.BOOK_AUTHOR}</td>
+                    <td><img style={{width:"50px", height: "50px", display:"inline-block"}} src={`${BASE_URL + book.FIRST_PAGE_URL}`} alt=""/></td>
                     <td>{statusBook[book.BOOK_STATUS]}</td>
                     <td className="text-center">
-                      {
-                        book.BOOK_STATUS !== 2 &&
-                        <button onClick={this.props.onApproveBook(book.BOOK_ID)} className="btn btn-sm btn-primary"><i className="fa fa-unlock" aria-hidden="true"></i></button>
-                      }
-                      {
-                        book.BOOK_STATUS === 2 &&
-                        <button onClick={this.props.onBanBook(book.BOOK_ID)} className="btn btn-sm btn-danger"><i className="fa fa-lock" aria-hidden="true"></i></button>
-                      }
+                    {
+                      book.BOOK_STATUS === 2 &&
+                      <button onClick={this.props.onApproveBook(book.BOOK_ID)} className="btn btn-sm btn-primary"><i class="fa fa-eye" aria-hidden="true"></i></button>
+                    }
+                    {
+                      book.BOOK_STATUS !== 2 &&
+                      <i className="fa fa-refresh fa-spin"></i>
+                    }
                     </td>
                   </tr>
                 )
@@ -73,12 +73,12 @@ class ApproveBook extends Component {
     );
   }
 }
-ApproveBook.PropTypes = {
+Uploaded.PropTypes = {
   books: array,
   onGetBooks: func.isRequired,
 };
-ApproveBook.defaultProps = {
+Uploaded.defaultProps = {
   books: [],
 }
 
-export default ApproveBook;
+export default Uploaded;

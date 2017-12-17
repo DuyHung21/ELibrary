@@ -20,8 +20,8 @@ GET /api/download/demo/{pdf_file}			:	get first page of the book in pdf format
 
 
 ** GET /api/librarian/books					: 	GET BOOKS BY LIBRARIAN
-** PUT /api/books/:id/approvce				
-** PUT /api/books/:id/reject
+** POST /api/books/:id/approve			
+** POST /api/books/:id/reject
 
 
 

@@ -57,7 +57,7 @@ export const getViewBookId = id => {
   }
 }
 
-export const onDowloadBook = (preState) => {
+export const onDowloadBook = () => {
   return (dispatch, getState) => {
     const state = getState();
     const linkDownload = `${state.books.bookId.BOOK_URL}?bookId=${state.books.bookId.BOOK_ID}`;
@@ -65,7 +65,6 @@ export const onDowloadBook = (preState) => {
       responseType: 'blob'
     })
     .then(res => {
-      console.log(res.data);
       const url = URL.createObjectURL(res.data);
       window.open(url, "_blank");
     })
@@ -76,15 +75,62 @@ export const getAllBooksByLibrarian = () => {
   return dispatch => {
     return request().get("/api/librarian/books")
     .then(res => {
+      dispatch(dispatchGetAllBooksByLibrarian(res.data));
+    })
+  }
+}
+
+export const approveBook = (id) => {
+  return dispatch => {
+    return request().post(`/api/books/${id}/approve`)
+    .then(res => {
+      request().get("/api/librarian/books")
+      .then(res => {
+        dispatch(dispatchGetAllBooksByLibrarian(res.data));
+      })
+    })
+  }
+}
+
+export const banBook = id => {
+  return dispatch => {
+    return request().post(`/api/books/${id}/reject`)
+    .then(res => {
+      request().get("/api/librarian/books")
+      .then(res=> {
+        dispatch(dispatchGetAllBooksByLibrarian(res.data));
+      })
+    })
+  }
+}
+
+const dispatchGetAllBooksByLibrarian = (data) => {
+  return {
+    type: "GET_ALL_BOOK_BY_LIBRARIAN",
+    payload: data
+  }
+}
+
+export const getBooksUploaded = () => {
+  return (dispatch, getState) => {
+    return request().get(`/api/books?userId=${getState().userActive.id}&action=uploaded`)
+    .then(res=>{
       dispatch({
-        type: "GET_ALL_BOOK_BY_LIBRARIAN",
+        type: "GET_BOOKS_UPLOADED",
         payload: res.data
       })
     })
   }
 }
 
-request().get("/api/books?userId=1&action=uploaded")
-.then(res=>{
-  console.log(res);
-})
+export const getBooksDownloaded = () => {
+  return (dispatch, getState) => {
+    return request().get(`/api/books?userId=${getState().userActive.id}&action=downloaded`)
+    .then(res=>{
+      dispatch({
+        type: "GET_BOOKS_DOWNLOADED",
+        payload: res.data
+      })
+    })
+  }
+}
