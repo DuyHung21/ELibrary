@@ -5,6 +5,7 @@ import ViewBook from "./ViewBook";
 import Register from "./Register";
 import User from "./User";
 import App from "./App";
+import Search from "./Search";
 
 export {
   Home,
@@ -13,5 +14,6 @@ export {
   ViewBook,
   Register,
   User,
-  App
+  App,
+  Search
 }

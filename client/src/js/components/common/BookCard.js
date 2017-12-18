@@ -3,7 +3,7 @@ import { BASE_URL, NameFaculty } from "../../api";
 import { Link } from "react-router-dom";
 import PropTypes, { object } from 'prop-types';
 
-const BookCard = props =>{
+const BookCard = props => {
   return(
     <div className="book-card">
       <div className="media">
@@ -25,6 +25,7 @@ const BookCard = props =>{
     </div>
   )
 }
+
 BookCard.PropTypes = {
   book: object,
 }

@@ -12,7 +12,7 @@ import {
 import { Header, Footer, Sidebar, Menu } from "../components/layouts";
 import { Route, Switch } from "react-router-dom";
 
-import { Home, Login , ViewFaculty, ViewBook} from '../containers';
+import { Home, Login , ViewFaculty, ViewBook, Search} from '../containers';
 
 class App extends Component {
   constructor(props){
@@ -48,6 +48,7 @@ class App extends Component {
               <div className = "col-md-9 col-thin">
                 <Switch>
                   <Route exact path = "/" component = {Home} />
+                  <Route exact path = "/search/:name" component = {Search} />
                   <Route exact path = "/home" component = {Home} />
                   <Route exact path = "/khoa/:id" component = {ViewFaculty} />
                   <Route exact path = "/book/:id" component = {ViewBook} />

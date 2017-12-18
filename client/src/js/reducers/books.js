@@ -48,6 +48,20 @@ export default (state = [], action) => {
       }
     }
 
+    case "GET_BOOKS_SEARCHED": {
+      return {
+        ...state,
+        booksSearched: action.payload
+      }
+    }
+
+    case "SAVE_BOOKMARK": {
+      return {
+        ...state,
+        booksMarked: action.payload 
+      }
+    }
+
     default: return state
   }
 }

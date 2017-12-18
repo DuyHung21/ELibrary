@@ -5,6 +5,7 @@ import UploadBox from "./UploadBox";
 import SideBar from "./SideBar";
 import UserInfo from "./UserInfo";
 import Downloaded from "./Downloaded";
+import BooksMarked from "./BooksMarked";
 export {
   ApproveBook,
   Uploaded,
@@ -12,5 +13,6 @@ export {
   UploadBox,
   SideBar,
   UserInfo,
-  Downloaded
+  Downloaded,
+  BooksMarked
 }

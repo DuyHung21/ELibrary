@@ -21,19 +21,19 @@ for(let i = 0; i < 29; i++) {
   usersShow.push({"id":i,"email":`tinh${i}.bkdn2014@gmail.com`,"username":`tinh${i}`,"fullname":`Jr tinh${i}`,"phone":`012${i}`,"role":3});
 }
 
-class Downloaded extends Component {
+class BooksMarked extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentWillMount() {
-    this.props.onGetBooks();
+  componentWillMount(){
+    console.log(this.props.books);
   }
-
+  
   render() {
     return (
       <div id="approve-book-container">
-        <BoxContain name="Books Downloaded">
+        <BoxContain name="Books BooksMarked">
           <div className="table-user">
             <table className="table table-hover">
               <thead>
@@ -78,12 +78,12 @@ class Downloaded extends Component {
     );
   }
 }
-Downloaded.PropTypes = {
+BooksMarked.PropTypes = {
   books: array,
   onGetBooks: func.isRequired,
 };
-Downloaded.defaultProps = {
+BooksMarked.defaultProps = {
   books: [],
 }
 
-export default Downloaded;
+export default BooksMarked;

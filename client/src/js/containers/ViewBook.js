@@ -6,7 +6,8 @@ import {
   onDowloadBook,
   saveUrlTmp,
   dispatchScreenWaiting,
-  getBooksByCategory
+  getBooksByCategory,
+  onBookMark
 } from "../actions";
 
 import { isEmpty } from "lodash";
@@ -18,6 +19,7 @@ class ViewBook extends Component {
     super(props);
     this.state = {
       isLoading: true,
+      isBookMarked: false,
     }
     this.hanleDownload = this.hanleDownload.bind(this);
   }
@@ -30,6 +32,7 @@ class ViewBook extends Component {
     if (nextProps.bookId !== undefined && nextProps.match.params.id != nextProps.bookId.BOOK_ID) {
       this.setState({isLoading: true});
       await this.props.getBookId(nextProps.match.params.id);
+      this.checkBookMared(nextProps.match.params.id);
       await this.props.getBooksByCategory(nextProps.bookId.CATEGORY_ID);
       this.setState({isLoading: false});
     }
@@ -37,10 +40,10 @@ class ViewBook extends Component {
 
   async componentWillMount() {
     await this.props.getBookId(this.props.match.params.id);
-    setTimeout(() => {
-      console.log(this.props.bookId);
-    }, 200);
-    this.setState({isLoading: false});
+    this.checkBookMared(this.props.match.params.id);
+    this.setState({
+      isLoading: false,
+    });
   }
 
   async hanleDownload() {
@@ -56,6 +59,25 @@ class ViewBook extends Component {
     }
   }
 
+  hanleBookMark = () => {
+    this.props.onBookMark(this.props.bookId);
+    this.setState({
+      isBookMarked: true
+    })
+  }
+
+  checkBookMared = (id) => {
+    let isBookMarked = false;
+    if(!isEmpty(this.props.booksMarked)) {
+      this.props.booksMarked.forEach(book => {
+        if (book.BOOK_ID === parseInt(id)) isBookMarked = true;
+      });
+    }
+    this.setState({
+      isBookMarked
+    });
+  }
+
   render(){
     return(
       <div>
@@ -66,6 +88,8 @@ class ViewBook extends Component {
             book={this.props.bookId}
             booksCare={this.props.booksCare}
             onDownload={this.hanleDownload}
+            onBookMark={this.hanleBookMark}
+            isBookMarked={this.state.isBookMarked}
           /> : <div className="text-center">
             <i className="fa fa-refresh fa-spin loader-big"></i>
           </div>
@@ -75,10 +99,12 @@ class ViewBook extends Component {
     )
   }
 }
+
 function mapStateToProps(state) {
   return{
     booksCare: state.books.booksCategory ? state.books.booksCategory : [],
     bookId: state.books.bookId ? state.books.bookId : {},
+    booksMarked: state.books.booksMarked
   }
 }
 
@@ -88,7 +114,8 @@ function mapDispatchToProps(dispatch){
     onDowloadBook,
     saveUrlTmp,
     dispatchScreenWaiting,
-    getBooksByCategory
+    getBooksByCategory,
+    onBookMark
   }, dispatch)
 }
 

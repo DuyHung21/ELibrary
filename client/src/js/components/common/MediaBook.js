@@ -18,6 +18,7 @@ class MediaBook extends Component {
               <span><i className="fa fa-cloud-download" aria-hidden="true"></i> Lượt tải: 35</span>
             </div>
             <p>Description: {this.props.book.BOOK_DESCRIPTION}</p>
+            <p>Khoa: <Link to={`/khoa/${this.props.book.CATEGORY_ID}`}>{NameFaculty[this.props.book.CATEGORY_ID]}</Link></p>
           </div>
         </div>
       </div>

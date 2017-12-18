@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import PropTypes, { array, func } from 'prop-types';
+import { isEmpty } from "lodash";
 import {
   BoxContain,
   Pagination
@@ -9,6 +10,7 @@ import {
 } from "../../api";
 
 const statusBook = {
+  0: "All",
   1: "Waiting",
   2: "Approved",
   3: "Rejected"
@@ -22,10 +24,27 @@ for(let i = 0; i < 29; i++) {
 class ApproveBook extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      curAction: 0,
+      books: [],
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const books = nextProps.books.filter(book=> this.state.curAction === 0 ? true : parseInt(book.BOOK_STATUS) === this.state.curAction);
+    this.setState({
+      books,
+    })
   }
 
   componentWillMount() {
     this.props.onGetBooks();
+  }
+
+  onChangeAction = (e) => {
+    this.setState({
+      curAction: parseInt(e.target.name),
+    })
   }
 
   render() {
@@ -33,7 +52,19 @@ class ApproveBook extends Component {
       <div id="approve-book-container">
         <BoxContain name="Duyệt/Block sách">
           <div className="table-user">
-            <h4>Can <code>Ban</code> and <code>Unban</code> books</h4>            
+            <h4>Can <code>Ban</code> and <code>Unban</code> books</h4>
+
+            <div className="dropdown">
+            <button className="btn-main btn-sm dropdown-toggle" type="button" data-toggle="dropdown">
+              {statusBook[this.state.curAction]} <span className="caret"></span></button>
+            <ul className="dropdown-menu">
+              <li><a name="0" onClick={this.onChangeAction} href="#all">All</a></li>
+              <li><a name="1" onClick={this.onChangeAction} href="#waitting">Waiting</a></li>
+              <li><a name="2" onClick={this.onChangeAction} href="#approved">Approved</a></li>
+              <li><a name="3" onClick={this.onChangeAction} href="#rejected">Rejected</a></li>
+            </ul>
+          </div>
+
             <table className="table table-hover">
               <thead>
                 <tr>
@@ -45,7 +76,7 @@ class ApproveBook extends Component {
                 </tr>
               </thead>
               <tbody>
-              {this.props.books.map((book, index) => {
+              {this.state.books.map((book, index) => {
                 return(
                   <tr key={index}>
                     <td>{index + 1}</td>

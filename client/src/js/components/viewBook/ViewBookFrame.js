@@ -8,7 +8,7 @@ const ViewBookFrame = props => {
           <b>Vui lòng tải xuống để xem đầy đủ</b>
         </div> 
         <div className="col-md-5 text-right">
-          <button className="btn btn-success">
+          <button disabled={props.isBookMarked} onClick={props.onBookMark} className="btn btn-success">
             <i className="fa fa-bookmark" aria-hidden="true"></i> Đánh dấu
           </button>
           <button className="btn btn-primary" onClick={props.onDownload}>

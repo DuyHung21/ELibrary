@@ -21,6 +21,8 @@ class ViewBookContent extends Component {
         <ViewBookFrame
           urlDemoBook={this.props.book.DEMO_URL}
           onDownload={this.props.onDownload}
+          onBookMark={this.props.onBookMark}
+          isBookMarked={this.props.isBookMarked}
         />
         <hr/>
         {

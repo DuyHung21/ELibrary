@@ -1,7 +1,7 @@
 import React , {Component} from "react";
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
-
+import { NameFaculty }from "../api";
 import {
   getAllBooks,
   getBooksByCategory
@@ -26,7 +26,7 @@ class ViewFaculty extends Component {
     const fac = this.props.faculties.filter(fac => parseInt(fac.CATEGORY_ID) === parseInt(this.props.match.params.id))[0];
     return(
       <div>
-        <BoxContain name = "Khoa công nghệ thông tin">
+        <BoxContain name = {fac?NameFaculty[fac.CATEGORY_ID]:""}>
           <MediaIntroduct description={fac?fac.CATEGORY_DESCRIPTION:""} />
         </BoxContain>
         <ViewFacultyContent books={this.props.books}/>

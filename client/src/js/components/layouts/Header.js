@@ -1,52 +1,88 @@
 import React, {Component} from 'react';
-import PropTypes, { object } from 'prop-types';
+import PropTypes, { object, func, number } from 'prop-types';
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
+import { NameFaculty } from "../../api";
 import {
-  getAllInfoFaculty,  
+  getAllInfoFaculty,
 } from "../../actions";
 import Logo from '../../../assets/images/Logo.png';
 
-import { Link } from 'react-router-dom';
+import { Link, Route, Redirect } from 'react-router-dom';
 import $ from 'jquery';
 
 const SearchInput = (props) => {
   return(
+    <form onSubmit={props.onSearch}>
     <div id="search-top-bar" className="input-group">
       <div className="input-group-btn search-panel">
           <button id = "dropdown-btn" type="button" className="btn bg-main dropdown-toggle" data-toggle="dropdown">
-            <span id="search_concept">Filter by</span><span className="caret"></span>
+            <span id="search_concept">{NameFaculty[props.curFilter]}</span><span className="caret"></span>
           </button>
           <ul id = "dropdown-menu-search" className="dropdown-menu" role="menu">
+            <li><a id={0} onClick={props.onChangeFilter} href="#">{NameFaculty[0]}</a></li>
             {
               props.faculties.map(fac => (
-                <li key={fac.CATEGORY_ID}><a href={`/home`}>{fac.CATEGORY_NAME}</a></li>
+                <li key={fac.CATEGORY_ID}><a id={fac.CATEGORY_ID} onClick={props.onChangeFilter} href="#">{fac.CATEGORY_NAME}</a></li>
               ))
             }
           </ul>
       </div>
       <input type="hidden" name="search_param" value="all" id="search_param" />         
-      <input type="text" className="form-control" name="x" placeholder="Search term..." />
+      <input id="inputSearch" type="text" className="form-control" name="x" placeholder="Search term..." required/>
       <span className="input-group-btn">
-          <button className="btn bg-main" type="button"><span className="glyphicon glyphicon-search"></span></button>
+          <button className="btn bg-main" type="submit"><span className="glyphicon glyphicon-search"></span></button>
       </span>
     </div>
+    </form>
   );
 }
 
 SearchInput.PropTypes = {
   faculties: object,
+  onChangeFilter: func,
+  onSearch: func,
+  curFilter: number
 }
 SearchInput.defaultProps = {
   faculties: [],
+  curFilter: 0,
+  onChangeFilter: () => {},
+  onSearch: () => {}
 }
 class Header extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      curFilter: 0,
+      nameSearch: "",
+      isRedirectSerach: false,
+    }
   }
+
+
+  handleChangeFilter = (e) => {
+    this.setState({
+      curFilter: parseInt(e.target.id)
+    })
+  }
+
+  handleSearch = async (e) => {
+    e.preventDefault();
+    const nameSearch = `${$("#inputSearch").val()}${this.state.curFilter?"&categoryId="+this.state.curFilter:""}`;
+    this.setState({
+      nameSearch,
+      isRedirectSerach: true
+    });
+  }
+
   render(){
     return(
       <header>
+        {
+          this.state.isRedirectSerach &&
+            <Redirect to={`/search/${this.state.nameSearch}`} />
+        }
         <div className = "container">
           <div className= "row">
             <div className = "col-sm-3">
@@ -56,7 +92,12 @@ class Header extends Component {
             </div>
 
             <div className = "col-sm-6">
-              <SearchInput faculties={this.props.faculties}/>
+              <SearchInput
+                onChangeFilter={this.handleChangeFilter}
+                faculties={this.props.faculties}
+                curFilter={this.state.curFilter}
+                onSearch={this.handleSearch}
+              />
             </div>
 
             <div className = "col-sm-3 text-right">
@@ -73,7 +114,7 @@ class Header extends Component {
                       <li><Link to="/user/upload"><i className="fa fa-cloud-upload" aria-hidden="true"></i> Upload Book</Link></li>
                       <li><Link to="/user/uploaded"><i className="fa fa-file" aria-hidden="true"></i> Uploaded</Link></li>
                       <li><Link to="/user/downloaded"><i className="fa fa-download" aria-hidden="true"></i> Downloaded</Link></li>
-                      <li><Link to="/user/bookmared"><i className="fa fa-bookmark" aria-hidden="true"></i> Bookmarked</Link></li>
+                      <li><Link to="/user/bookmarked"><i className="fa fa-bookmark" aria-hidden="true"></i> Bookmarked</Link></li>
                       {
                         this.props.userActive.role === 2 &&
                         <li><Link to="/user/approve"><i className="fa fa-unlock" aria-hidden="true"></i> Duyệt/Block sách</Link></li>

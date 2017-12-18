@@ -125,6 +125,7 @@ class User extends Component {
           onGetBooksDownloaded={this.props.getBooksDownloaded}
           booksUploaded={this.props.booksUploaded}
           booksDownloaded={this.props.booksDownloaded}
+          booksMarked={this.props.booksMarked}
         />
         <Footer />
       </div>
@@ -138,7 +139,8 @@ function mapStateToProps(state) {
     isLoadingScreen: state.isLoadingScreen,
     allBooksForLibrarian: state.books.allBooksForLibrarian,
     booksUploaded: state.books.booksUploaded,
-    booksDownloaded: state.books.booksDownloaded
+    booksDownloaded: state.books.booksDownloaded,
+    booksMarked: state.books.booksMarked
   }
 }
 

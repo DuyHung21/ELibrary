@@ -20,7 +20,9 @@ import {
   banBook,
   getBooksUploaded,
   getBooksDownloaded,
-  getBooksByCategory
+  getBooksByCategory,
+  searchBooks,
+  onBookMark
 } from "./file";
 
 import {
@@ -58,6 +60,8 @@ export {
   getBooksUploaded,
   getBooksDownloaded,
   getBooksByCategory,
+  searchBooks,
+  onBookMark,
   //Url Tmp
   saveUrlTmp,
   //Faculty 

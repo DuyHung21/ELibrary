@@ -8,7 +8,7 @@ GET /api/books								:	Get all books
 GET /api/books?name=name 					:	Get all books by name
 GET /api/books?categoryId=1					:	GET books by cateogry
 GET /api/books?userId=1&action=uploaded		: 	GEt created books by user
-GET /api/books?userId=1&action=downloaded		: 	GEt created books by user
+GET /api/books?userId=1&action=downloaded		: 	GEt downloaded books by user
 
 GET /api/books/:id
 GET /api/books/:id/viewed					: 	GET count view of the book

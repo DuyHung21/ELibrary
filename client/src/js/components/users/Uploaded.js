@@ -32,14 +32,13 @@ class Uploaded extends Component {
   render() {
     return (
       <div id="approve-book-container">
-        <BoxContain name="Duyệt/Block sách">
+        <BoxContain name="Books Uploaded">
           <div className="table-user">
-            <h4>Can <code>Ban</code> and <code>Unban</code> books</h4>            
             <table className="table table-hover">
               <thead>
                 <tr>
                   <th>STT</th>
-                  <th>Name</th>
+                  <th style={{width: "200px"}}>Name</th>
                   <th>Image</th>
                   <th>Status</th>
                   <th className="text-center">Action</th>
@@ -50,13 +49,16 @@ class Uploaded extends Component {
                 return(
                   <tr key={index}>
                     <td>{index + 1}</td>
-                    <td>{book.BOOK_NAME}</td>
+                    <td style={{width: "200px"}}>{book.BOOK_NAME}</td>
                     <td><img style={{width:"50px", height: "50px", display:"inline-block"}} src={`${BASE_URL + book.FIRST_PAGE_URL}`} alt=""/></td>
                     <td>{statusBook[book.BOOK_STATUS]}</td>
                     <td className="text-center">
-                    
                     {
-                      book.BOOK_STATUS !== 1 &&
+                      book.BOOK_STATUS === 3 &&
+                      <button disabled className="btn btn-sm btn-primary"><i className="fa fa-eye" aria-hidden="true"></i> view</button>
+                    }
+                    {
+                      book.BOOK_STATUS === 2 &&
                       <Link to={`/book/${book.BOOK_ID}`}><button className="btn btn-sm btn-primary"><i className="fa fa-eye" aria-hidden="true"></i> view</button></Link>
                     }
                     {

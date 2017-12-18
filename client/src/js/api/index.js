@@ -14,6 +14,7 @@ export const request = () => {
 }
 
 export const NameFaculty = {
+  0: "Tất cả",
   1: "Công nghệ thông tin",
   2: "Cơ điện tử",
   3: "Cơ khí",

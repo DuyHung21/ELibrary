@@ -8,7 +8,8 @@ import {
   UploadBox,
   SideBar,
   UserInfo,
-  Downloaded
+  Downloaded,
+  BooksMarked
 } from "./index";
 import $ from "jquery";
 
@@ -161,21 +162,29 @@ class UserControl extends Component {
       return (
         <Uploaded
           books={this.props.booksUploaded}
-          onApproveBook={this.props.onApproveBook}
           onGetBooks={this.props.onGetBooksUploaded}
         />
       )
     }
 
+
     const downloaded = props => {
       return (
         <Downloaded
           books={this.props.booksDownloaded}
-          onApproveBook={this.props.onApproveBook}
           onGetBooks={this.props.onGetBooksDownloaded}
         />
       )
     }
+
+    const booksMarked = props => {
+      return (
+        <BooksMarked
+          books={this.props.booksMarked}
+        />
+      )
+    }
+
     return(
       <div id = "user-container">
         <div className = "container">
@@ -196,6 +205,7 @@ class UserControl extends Component {
                 <Route exact path="/user/upload" render={uploadBox} />
                 <Route exact path="/user/uploaded" render={uploaded} />
                 <Route exact path="/user/downloaded" render={downloaded} />
+                <Route exact path="/user/bookmarked" render={booksMarked} />
                 <Route exact path="/user/approve" render={approveBook} />
               </Switch>
             </div>

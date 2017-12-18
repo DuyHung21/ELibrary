@@ -32,7 +32,7 @@ export default props => {
             <Link to="/user/downloaded" id="info" onClick={props.onChangAction} ><i className="fa fa-cloud-download" aria-hidden="true"></i> Danh sách downloaded</Link>
           </div>
           <div>
-            <Link to="/user" id="info" onClick={props.onChangAction} ><i className="fa fa-bookmark" aria-hidden="true"></i> Danh sách đã đánh dấu</Link>
+            <Link to="/user/bookmarked" id="info" onClick={props.onChangAction} ><i className="fa fa-bookmark" aria-hidden="true"></i> Danh sách đã đánh dấu</Link>
           </div>
           {
             props.userActive.role === 2 &&
