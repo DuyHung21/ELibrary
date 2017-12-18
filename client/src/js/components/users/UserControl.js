@@ -8,6 +8,7 @@ import {
   UploadBox,
   SideBar,
   UserInfo,
+  Downloaded
 } from "./index";
 import $ from "jquery";
 
@@ -78,7 +79,6 @@ class UserControl extends Component {
         }
       })
     }
-    
   }
 
   handleUpdate = (e) => {
@@ -169,7 +169,7 @@ class UserControl extends Component {
 
     const downloaded = props => {
       return (
-        <Uploaded
+        <Downloaded
           books={this.props.booksDownloaded}
           onApproveBook={this.props.onApproveBook}
           onGetBooks={this.props.onGetBooksDownloaded}

@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import PropTypes, { array, func } from 'prop-types';
 import { Link } from "react-router-dom";
+
 import {
   BoxContain,
   Pagination
@@ -20,7 +21,7 @@ for(let i = 0; i < 29; i++) {
   usersShow.push({"id":i,"email":`tinh${i}.bkdn2014@gmail.com`,"username":`tinh${i}`,"fullname":`Jr tinh${i}`,"phone":`012${i}`,"role":3});
 }
 
-class Uploaded extends Component {
+class Downloaded extends Component {
   constructor(props) {
     super(props);
   }
@@ -54,10 +55,13 @@ class Uploaded extends Component {
                     <td><img style={{width:"50px", height: "50px", display:"inline-block"}} src={`${BASE_URL + book.FIRST_PAGE_URL}`} alt=""/></td>
                     <td>{statusBook[book.BOOK_STATUS]}</td>
                     <td className="text-center">
-                    
                     {
-                      book.BOOK_STATUS !== 1 &&
-                      <Link to={`/book/${book.BOOK_ID}`}><button className="btn btn-sm btn-primary"><i className="fa fa-eye" aria-hidden="true"></i> view</button></Link>
+                      book.BOOK_STATUS === 3 &&
+                      <button disabled={true} className="btn btn-sm btn-primary"><i className="fa fa-eye" aria-hidden="true"></i> view</button>
+                    }
+                    {
+                      book.BOOK_STATUS === 2 &&
+                      <Link to={`/book/${book.BOOK_ID}`} ><button className="btn btn-sm btn-primary"><i className="fa fa-eye" aria-hidden="true"></i> view</button></Link>
                     }
                     {
                       book.BOOK_STATUS === 1 &&
@@ -75,12 +79,12 @@ class Uploaded extends Component {
     );
   }
 }
-Uploaded.PropTypes = {
+Downloaded.PropTypes = {
   books: array,
   onGetBooks: func.isRequired,
 };
-Uploaded.defaultProps = {
+Downloaded.defaultProps = {
   books: [],
 }
 
-export default Uploaded;
+export default Downloaded;

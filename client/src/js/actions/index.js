@@ -19,7 +19,8 @@ import {
   approveBook,
   banBook,
   getBooksUploaded,
-  getBooksDownloaded
+  getBooksDownloaded,
+  getBooksByCategory
 } from "./file";
 
 import {
@@ -56,6 +57,7 @@ export {
   banBook,
   getBooksUploaded,
   getBooksDownloaded,
+  getBooksByCategory,
   //Url Tmp
   saveUrlTmp,
   //Faculty 

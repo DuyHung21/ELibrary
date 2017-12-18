@@ -30,6 +30,12 @@ class App extends Component {
   render(){
     return(
       <div>
+      {
+        this.props.isLoadingScreen &&
+        <div className="screen-waiting">
+          <i className="fa fa-refresh fa-spin"></i>
+        </div>
+      }
         <Header />
         <Menu />
         <div id = "home-content">
@@ -43,7 +49,7 @@ class App extends Component {
                 <Switch>
                   <Route exact path = "/" component = {Home} />
                   <Route exact path = "/home" component = {Home} />
-                  <Route exact path = "/khoa/:name" component = {ViewFaculty} />
+                  <Route exact path = "/khoa/:id" component = {ViewFaculty} />
                   <Route exact path = "/book/:id" component = {ViewBook} />
                 </Switch>
               </div>

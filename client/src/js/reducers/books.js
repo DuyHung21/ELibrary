@@ -41,6 +41,13 @@ export default (state = [], action) => {
       }
     }
 
+    case "GET_BOOKS_CATEGORY": {
+      return {
+        ...state,
+        booksCategory: action.payload
+      }
+    }
+
     default: return state
   }
 }

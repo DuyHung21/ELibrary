@@ -78,6 +78,7 @@ class Header extends Component {
                         this.props.userActive.role === 2 &&
                         <li><Link to="/user/approve"><i className="fa fa-unlock" aria-hidden="true"></i> Duyệt/Block sách</Link></li>
                       }
+                      <hr style={{margin: "4px"}}/>
                       <li><Link to="/login"><i className="fa fa-sign-out" aria-hidden="true"></i> Log out</Link></li>
                     </ul>
                   </div>

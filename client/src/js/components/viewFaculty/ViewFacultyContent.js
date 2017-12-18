@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-
+import PropTypes, { array } from 'prop-types';
 import {LatestDocuments, AllDocuments} from "./index";
 
 class ViewFacultyContent extends Component {
@@ -10,12 +10,18 @@ class ViewFacultyContent extends Component {
   render(){
     return (
       <div>
-        <LatestDocuments books={this.props.books} title="Tài liệu mới nhất" />
-        <AllDocuments />        
-
+        <LatestDocuments books={this.props.books.slice(this.props.books.length > 3 ? this.props.books.length - 3 : 0, this.props.books.length > 3 ? this.props.books.length : 3).reverse()} title="Tài liệu mới nhất" />
+        <AllDocuments books={this.props.books} />     
       </div>
     )
   }
+}
+
+ViewFacultyContent.PropTypes = {
+  books: array,
+}
+ViewFacultyContent.defaultProps = {
+  books: [],
 }
 
 export default ViewFacultyContent;

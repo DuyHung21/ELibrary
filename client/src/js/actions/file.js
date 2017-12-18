@@ -134,3 +134,15 @@ export const getBooksDownloaded = () => {
     })
   }
 }
+
+export const getBooksByCategory = (id) => {
+  return dispatch => {
+    return request().get(`/api/books?categoryId=${id}`)
+    .then(res=>{
+      dispatch({
+        type: "GET_BOOKS_CATEGORY",
+        payload: res.data
+      })
+    })
+  }
+}

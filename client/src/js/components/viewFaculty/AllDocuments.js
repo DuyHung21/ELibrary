@@ -1,5 +1,6 @@
 import React , {Component} from "react";
 import {Pagination, MediaBook} from "../common";
+import { isEmpty } from "lodash";
 
 class AllDocuments extends Component {
   render() {
@@ -8,13 +9,20 @@ class AllDocuments extends Component {
         <div className="container">
           <Pagination />
           <div className="all-book-container">
-            <MediaBook /> 
-            <hr/>
-            <MediaBook />
-            <hr/>
-            <MediaBook />
-            <hr/>
-            <MediaBook />
+          {
+            this.props.books.map(book => (
+              <div key={book.BOOK_ID}>
+                <MediaBook book={book}/>
+                <hr/>
+              </div>
+            ))
+          }
+          {
+            isEmpty(this.props.books) &&
+            <div className="text-center">
+              <i className="fa fa-refresh fa-spin loader-small"></i>
+            </div>
+          }
           </div>
           <Pagination />
         </div>

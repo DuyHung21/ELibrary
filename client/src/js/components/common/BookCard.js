@@ -1,6 +1,8 @@
 import React from "react";
 import { BASE_URL, NameFaculty } from "../../api";
+import { Link } from "react-router-dom";
 import PropTypes, { object } from 'prop-types';
+
 const BookCard = props =>{
   return(
     <div className="book-card">
@@ -17,7 +19,7 @@ const BookCard = props =>{
             <span><i className="fa fa-cloud-download" aria-hidden="true"></i> Lượt tải: 35</span>
           </div>
           <p>{props.book.BOOK_DESCRIPTION}</p>
-          <p>Mục: <a href="">{NameFaculty[props.book.CATEGORY_ID]}</a></p>
+          <p>Mục: <Link to={`/khoa/${props.book.CATEGORY_ID}`}>{NameFaculty[props.book.CATEGORY_ID]}</Link></p>
         </div>
       </div>
     </div>

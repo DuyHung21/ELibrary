@@ -11,10 +11,6 @@ class ViewBookContent extends Component {
     super(props);
   }
 
-  componentWillReceiveProps(nextProps) {
-    // console.log(nextProps);
-  }
-
   render(){
     return (
       <div id="ViewBook-container">
@@ -27,7 +23,11 @@ class ViewBookContent extends Component {
           onDownload={this.props.onDownload}
         />
         <hr/>
-        <BookCardMini />
+        {
+          this.props.booksCare.map(book=>(
+            <BookCardMini key={book.BOOK_ID} book={book}/>
+          ))
+        }
       </div>
     )
   }

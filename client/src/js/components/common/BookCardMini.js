@@ -1,21 +1,24 @@
 import React from "react";
+import {BASE_URL, NameFaculty} from "../../api";
+import { Link } from "react-router-dom";
+
 
 const BookCardMini = props => {
   return (
     <div className="book-card-mini">
       <div className="media">
-        <div className="media-left media-bottom pull-left">
-          <img src="http://images.carsondellosa.com/media/cd/images/product/large/104783.jpg" className="media-object" style={{width: "150px", height: "150px", display: "inline-block"}} />
+        <div className="media-left media-bottom pull-left" style={{overflow: "hidden"}}>
+          <img src={`${BASE_URL+props.book.FIRST_PAGE_URL}`} className="media-object img" style={{width: "150px", height: "150px", display: "inline-block"}} />
         </div>
         <div className="media-body">
-          <h4>Hình Học Họa Hình - Phần 5 - Dương Thọ</h4>
+          <Link to={`/book/${props.book.BOOK_ID}`}><h4>{props.book.BOOK_NAME}</h4></Link>
           <div className="status-book">
             <span><i className="fa fa-database" aria-hidden="true"></i> Dung lượng: 0.2MB</span>
             <span><i className="fa fa-file" aria-hidden="true"></i> Kiểu file: PDF</span>
             <span><i className="fa fa-eye" aria-hidden="true"></i> Lượt xem: 408</span>
             <span><i className="fa fa-cloud-download" aria-hidden="true"></i> Lượt tải: 35</span>
           </div>
-          <p>Mục: <a href="">Công nghệ thông tin</a></p>
+          <p>Mục: <Link to={`/khoa/${props.book.CATEGORY_ID}`}>{NameFaculty[props.book.CATEGORY_ID]}</Link></p>
         </div>
       </div>
     </div>
