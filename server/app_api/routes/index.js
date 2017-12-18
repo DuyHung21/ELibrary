@@ -22,8 +22,10 @@ router.post('/users/login', passport.authenticate('local', {
 		
 router.get('/users', auth, ctrlUser.findAll);
 router.post('/users/:userId', auth, ctrlUser.updateUser);
+router.post('/users/:userId/enable', auth, ctrlUser.enable);
+router.post('/users/:userId/disable', auth, ctrlUser.disable);
+
 router.post('/users/:userId/password', auth, ctrlUser.updatePassword);
-router.post('/users/:userId/delete', auth, ctrlUser.deleteUser);
 
 router.post('/books', auth, ctrlBook.create);
 router.post('/books/:bookId/approve', auth, ctrlBook.approve);

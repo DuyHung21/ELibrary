@@ -3,7 +3,7 @@ const mysql = require('mysql');
 let pool;
 if (process.env.NODE_ENV === 'test') {
 	pool = mysql.createPool({
-		connectionLimit : 10,
+		connectionLimit : 20,
 	  	host     : process.env.db_host_test,
 	  	user     : process.env.db_user_test,
 	  	password : process.env.db_password_test,
@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'test') {
 } else {
 	console.log("Dev");
 	pool = mysql.createPool({
-		connectionLimit : 10,
+		connectionLimit : 20,
 	  	host     : process.env.db_host_dev,
 	  	user     : process.env.db_user_dev,
 	  	password : process.env.db_password_dev,

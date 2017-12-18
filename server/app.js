@@ -15,6 +15,7 @@ const apiRouter = require('./app_api/routes/index');
 
 const app = express();
 app.use(cors());
+app.disable('etag');
 
 
 // view engine setup

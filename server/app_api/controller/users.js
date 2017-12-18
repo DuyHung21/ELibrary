@@ -12,6 +12,7 @@ const validateUser = (username, password, cb) => {
 	_findOneByUserName(username, (err, user) => {
 		if (err) cb(err);
 		else if (!user) cb(null, null);
+		else if (user.USER_IS_ACTIVE == 0) cb(null, null);
 		else {
 			if (!_validPassword(user.USER_PASSWORD, user.USER_SALT, password)) cb(null, null);
 			else cb(null, user); 
@@ -66,7 +67,7 @@ const findAll = (req, res)=> {
 	}
 	else {
 		db.getConnection((err, connection) => {
-			let queryStatement = 'SELECT * FROM USER WHERE USER_ROLE=?';
+			let queryStatement = 'SELECT * FROM USER WHERE USER_ROLE!=?';
 		  	// Use the connection
 
 	  		connection.query(queryStatement,
@@ -85,37 +86,6 @@ const findAll = (req, res)=> {
 		});
 	}
 }
-
-const deleteUser = (req, res)=> {
-	const user = req.payload;
-
-	if (user.role != USER_ROLE.ADMIN) {
-		res.status(401).json("Permission Denied");
-		return;
-	}
-	else {
-		db.getConnection((err, connection) => {
-			let queryStatement = 'DELETE FROM USER WHERE USER_ID=?';
-		  	// Use the connection
-
-	  		connection.query(queryStatement,
-	  			[req.query.userId], 
-	  			(error, results, fields) => {
-	    			// And done with the connection.
-	    			connection.release();
-
-	    			if (error) {
-	    				res.status(500).json(error)
-	    			} else {
-	    				res.status(200).json(results);
-	    			}
-	    			// Don't use the connection here, it has been returned to the pool.
-	  			});
-		});
-	}
-
-}
-
 
 const _generateJwt = (user) => {
 	let expiry = new Date();
@@ -147,6 +117,10 @@ const _generateJwt = (user) => {
 }
 
 const _create = (user, cb)=> {
+	if (!user) {
+		res.status(401).json("missing fields");
+		return;
+	}
 	db.getConnection((err, connection) => {
 		let queryStatement = 'INSERT INTO ' 
 			+ 'USER(USER_NAME,USER_PASSWORD,USER_SALT,USER_EMAIL,USER_FULLNAME,USER_ADDRESS,USER_PHONE, USER_ROLE) '
@@ -181,7 +155,7 @@ const _findOneByEmail = (email, cb) => {
 			connection.release();
 			cb(error, results);
 		})
-	})
+	})	
 };
 
 const _findOneByUserName = (username, cb)=> {
@@ -196,7 +170,7 @@ const _findOneByUserName = (username, cb)=> {
 
 const updateUser = (req, res) => {
 	const user = req.payload;
-	if (user.id == req.params.userId || user.role == USER_ROLE.ADMIN) {
+	if (user.id == req.params.userId || (user.role == USER_ROLE.ADMIN && user.id != req.params.userId)) {
 		db.getConnection((err, connection) => {
 			let array = []
 			let queryStatement = "UPDATE USER SET "
@@ -279,6 +253,65 @@ const updatePassword = (req, res)=> {
 }
 
 
+const disable = (req, res)=> {
+	const user = req.payload;
+
+	if (user.role != USER_ROLE.ADMIN || (user.role == USER_ROLE.ADMIN && user.id == req.params.userId)) {
+		res.status(401).json("Permission Denied");
+		return;
+	}
+	else {
+		db.getConnection((err, connection) => {
+			let queryStatement = 'UPDATE USER SET USER_IS_ACTIVE = 0 WHERE USER_ID=?';
+		  	// Use the connection
+
+	  		connection.query(queryStatement,
+	  			[req.params.userId], 
+	  			(error, results, fields) => {
+	    			// And done with the connection.
+	    			connection.release();
+
+	    			if (error) {
+	    				res.status(500).json(error)
+	    			} else {
+	    				res.status(200).json(results);
+	    			}
+	    			// Don't use the connection here, it has been returned to the pool.
+	  			});
+		});
+	}
+
+}
+
+const enable = (req, res)=> {
+	const user = req.payload;
+
+	if (user.role != USER_ROLE.ADMIN || (user.role == USER_ROLE.ADMIN && user.id == req.params.userId)) {
+		res.status(401).json("Permission Denied");
+		return;
+	}
+	else {
+		db.getConnection((err, connection) => {
+			let queryStatement = 'UPDATE USER SET USER_IS_ACTIVE = 1 WHERE USER_ID=?';
+		  	// Use the connection
+
+	  		connection.query(queryStatement,
+	  			[req.params.userId], 
+	  			(error, results, fields) => {
+	    			// And done with the connection.
+	    			connection.release();
+
+	    			if (error) {
+	    				res.status(500).json(error)
+	    			} else {
+	    				res.status(200).json(results);
+	    			}
+	    			// Don't use the connection here, it has been returned to the pool.
+	  			});
+		});
+	}
+
+}
 
 const _setPassword =(password)=> {
 	let salt =  crypto.randomBytes(16).toString('hex');
@@ -323,5 +356,6 @@ module.exports = {
 	validateUser,
 	updateUser,
 	updatePassword,
-	deleteUser
+	enable,
+	disable
 };

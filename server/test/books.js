@@ -170,6 +170,7 @@ describe('Books', () => {
 				.attach('file', fs.readFileSync(path.resolve('./test/test.pdf')), 'test.pdf')				
 
 				.end((err, res)=> {
+					console.log(err);
 					res.should.have.status(201);
 					done();
 				})
@@ -367,6 +368,16 @@ describe('Books', () => {
 					done();
 				})
 		})
+
+		it("It should get one book by category", (done)=> {
+			chai.request(server)
+				.get("/api/books?name=test&categoryId=1")
+				.end((err, res)=> {
+					res.should.have.status(200);
+					expect(res.body.length).to.equal(1);
+					done();
+				})
+		})		
 
 		it("It should get 0 book", (done)=> {
 			chai.request(server)

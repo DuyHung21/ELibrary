@@ -1,8 +1,10 @@
 ***GET  /api/users					: get all users except admin
+***POST /api/users/enable
+***POST /api/users/disable
 POST /api/users					:	Register
 POST /api/users/login			:	Login
-PUT	/api/users/:id				: 	Change info
-PUT	/api/users/:id/password		: 	
+POST	/api/users/:id				: 	Change info
+POST	/api/users/:id/password		: 	
 
 GET /api/books								:	Get all books
 GET /api/books?name=name 					:	Get all books by name
