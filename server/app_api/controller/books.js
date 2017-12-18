@@ -48,7 +48,7 @@ const upload = multer({storage: storage}).single('file');
 
 const find = (req, res) => {
 	const option = req.query;
-	if (option.categoryId) {
+	if (option.categoryId && !option.name) {
 		let queryStatement = 'SELECT * from BOOK where CATEGORY_ID = ? AND BOOK_STATUS = ? ';
 		queryStatement = _addionalOption(queryStatement, option)
 		db.getConnection((err, connection) => {
@@ -98,8 +98,10 @@ const find = (req, res) => {
 			})
 		})
 	} else if (option.name) {
-		let queryStatement = 'SELECT * from BOOK where BOOK_NAME = ? AND BOOK_STATUS = ? ';
-		if (option.categoryId) queryStatement += 'AND CATEGORY_ID = ' + option.categoryId;
+		let queryStatement = 'SELECT * from BOOK where ';
+		if (option.categoryId) queryStatement += "CATEGORY_ID = " + option.categoryId + " AND " ;
+		queryStatement += ' BOOK_NAME REGEXP ? AND BOOK_STATUS = ? ';
+
 		queryStatement = _addionalOption(queryStatement, option)
 		db.getConnection((err, connection) => {
 			connection.query(queryStatement,[option.name, BOOK_STATUS.APPROVED], (error, results, fields) => {
@@ -191,7 +193,7 @@ const librarianFind = (req, res)=> {
 }
 
 const findOne = (req, res) => {
-	let queryStatement = 'SELECT * from BOOK where BOOK_ID = ?';
+	let queryStatement = 'SELECT * from BOOK where BOOK_ID = ? AND BOOK_STATUS = ?';
 	let user;
 	if (req.headers.authorization) {
 		let raw_token = req.headers.authorization.split(" ")[1];
@@ -203,7 +205,7 @@ const findOne = (req, res) => {
 		}
 	}
 	db.getConnection((err, connection) => {
-		connection.query(queryStatement, [req.params.bookId], (error, results, fields) => {
+		connection.query(queryStatement, [req.params.bookId, BOOK_STATUS.APPROVED], (error, results, fields) => {
 			connection.release();
 			if (error) {
 				res.status(400).json(error)
