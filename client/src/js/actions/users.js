@@ -14,6 +14,21 @@ export const onCheckAuth = () => {
   }
 }
 
+export const onCheckAuthAdmin = () => {
+  return dispatch => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      const curUser = window.atob(token.split(".")[1]);
+      if (curUser.username === "admin") {
+        dispatch({
+          type: "ON_LOGIN_USER",
+          payload: JSON.parse(curUser),
+        });
+      }
+    }
+  }
+}
+
 export const onLoginUser = (user) =>{
   return dispatch => {
     return request().post("/api/users/login", {
@@ -64,6 +79,28 @@ export const onUpdateUser = (user) => {
   }
 }
 
+export const onEditUserByAdmin = (user) => {
+  return dispatch => {
+    const userEdit = {
+      username: user.USER_NAME,
+      email: user.USER_EMAIL,
+      fullname: user.USER_FULLNAME,
+      phone: user.USER_PHONE
+    }
+    return request().post(`/api/users/${user.USER_ID}`, {...userEdit}).then(res=>{
+      // console.log(res);
+    })
+  }
+}
+
+export const onChangeIsActiveUserByAdmin = (user) => {
+  return dispatch => {
+    return request().post(`/api/users/${user.USER_ID}/${user.USER_IS_ACTIVE ? "disable" : "enable"}`).then(res=>{
+      console.log(res);
+    })
+  }
+}
+
 export const onChangePass = (infoPass) => {
   return dispatch => {
     const curUser = JSON.parse(localStorage.getItem("dataUser"));
@@ -82,9 +119,22 @@ export const onChangePass = (infoPass) => {
 
 export const onLogoutUser = () => {
   localStorage.removeItem("token");
-  localStorage.removeItem("curUser");
+  localStorage.removeItem("dataUser");
   return {
     type: "ON_LOGOUT_USER",
     payload: [],
+  }
+}
+
+export const getUsersByAdmin = () => {
+  return dispatch => {
+    return request().get("/api/users")
+    .then(res => {
+      console.log(res);
+      dispatch({
+        type: "ALL_USER_FOR_ADMIN",
+        payload: res.data
+      })
+    })
   }
 }

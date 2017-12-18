@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import { isEmpty } from "lodash";
+
 import {DashboardContent} from "../../components/admin";
 import { Header, Sidebar } from "../../components/admin/layouts";
 import { Route, Switch } from "react-router-dom";
@@ -12,6 +16,12 @@ class Dashboard extends Component {
   render(){
     return(
       <div id="admin-container">
+      {
+        this.props.isLoadingScreen &&
+        <div className="screen-waiting">
+          <i className="fa fa-refresh fa-spin"></i>
+        </div>
+      }
         <Header />
         <div className="row">
           <div className="col-md-2">
@@ -29,4 +39,16 @@ class Dashboard extends Component {
     )
   }
 }
-export default Dashboard;
+
+function mapStateToProps(state) {
+  return{
+    isLoadingScreen: state.isLoadingScreen
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+  }, dispatch)
+}
+
+export default connect (mapStateToProps, mapDispatchToProps) (Dashboard);

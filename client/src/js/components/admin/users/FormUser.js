@@ -9,7 +9,7 @@ export default class FormUser extends Component {
   }
 
   componentWillMount() {
-    if (this.props.user.id === undefined) this.props.history.push("/admin/users");
+    if (this.props.user.USER_ID === undefined) this.props.history.push("/admin/users");
     this.setState({
       user: this.props.user
     })
@@ -42,40 +42,40 @@ export default class FormUser extends Component {
           <form onSubmit={this.handleSubmit}>
             <div className="form-group row">
               <div className="col-md-3">
-                <label htmlFor="username">Username: </label>
+                <label htmlFor="USER_NAME">Username: </label>
               </div>
               <div className="col-md-9">
-                <input className = "form-control" type="text" id="username" onChange={this.onChange} value={this.state.user.username} required/>
+                <input className = "form-control" type="text" id="USER_NAME" onChange={this.onChange} value={this.state.user.USER_NAME} required/>
                 <p className = "text-danger" ></p>
               </div>
             </div>
   
             <div className="form-group row">
               <div className="col-md-3">
-                <label htmlFor="email">Email: </label>
+                <label htmlFor="USER_EMAIL">Email: </label>
               </div>
               <div className="col-md-9">
-                <input className = "form-control" type="email" id="email" onChange={this.onChange} value={this.state.user.email} required/>
+                <input className = "form-control" type="email" id="USER_EMAIL" onChange={this.onChange} value={this.state.user.USER_EMAIL} required/>
                 <p className = "text-danger" ></p>
               </div>
             </div>
   
             <div className="form-group row">
               <div className="col-md-3">
-                <label htmlFor="fullname">Full name: </label>
+                <label htmlFor="USER_FULLNAME">Full name: </label>
               </div>
               <div className="col-md-9">
-                <input className = "form-control" type="text" id="fullname" onChange={this.onChange} value={this.state.user.fullname} required/>
+                <input className = "form-control" type="text" id="USER_FULLNAME" onChange={this.onChange} value={this.state.user.USER_FULLNAME} required/>
                 <p className = "text-danger" ></p>
               </div>
             </div>
   
             <div className="form-group row">
               <div className="col-md-3">
-                <label htmlFor="phone">Phone: </label>
+                <label htmlFor="USER_PHONE">Phone: </label>
               </div>
               <div className="col-md-9">
-                <input className = "form-control" type="number" id="phone" onChange={this.onChange} value={this.state.user.phone} required/>
+                <input className = "form-control" type="number" id="USER_PHONE" onChange={this.onChange} value={this.state.user.USER_PHONE} required/>
                 <p className = "text-danger" ></p>
               </div>
             </div>

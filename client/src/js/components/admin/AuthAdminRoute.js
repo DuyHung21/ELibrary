@@ -2,6 +2,11 @@ import React, {Component} from 'react';
 import {
   BrowserRouter, Route, Switch, Redirect
 } from 'react-router-dom';
+import { isEmpty } from "lodash";
+
+import {
+  onCheckAuthAdmin,
+} from "../../actions";
 
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux';
@@ -11,8 +16,17 @@ class AuthAdminRoute extends Component {
     super(props);
   }
   
+  componentWillMount() {
+    this.props.onCheckAuthAdmin();
+  }
+
   checkAuth = () => {
-    return true;
+    const dataUser = JSON.parse(localStorage.getItem("dataUser"));
+    if (dataUser && dataUser.username === "admin") {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   render(){
@@ -30,8 +44,15 @@ class AuthAdminRoute extends Component {
 
 const mapStateToProps = (state) => {
   return({
-    activeUser: null
+    activeUser: state.activeUser
   })
 }
 
-export default connect(mapStateToProps)(AuthAdminRoute);
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+    onCheckAuthAdmin,
+  }, dispatch)
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(AuthAdminRoute);

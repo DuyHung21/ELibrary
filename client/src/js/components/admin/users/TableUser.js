@@ -13,7 +13,7 @@ export default props => {
             <th>Username</th>
             <th>Email</th>
             <th>Fullname</th>
-            <th>Phone</th>
+            <th>Created</th>
             <th>Role</th>
             <th className="text-center">Action</th>
           </tr>
@@ -23,15 +23,21 @@ export default props => {
           return(
             <tr key={index}>
               <td>{index + 1}</td>
-              <td>{user.username}</td>
-              <td>{user.email}</td>
-              <td>{user.fullname}</td>
-              <td>{user.phone}</td>
-              <td>{user.role}</td>
+              <td>{user.USER_NAME}</td>
+              <td>{user.USER_EMAIL}</td>
+              <td>{user.USER_FULLNAME}</td>
+              <td>{user.USER_DATE_CREATED}</td>
+              <td>{user.USER_ROLE}</td>
               <td className="text-center">
-                <button className="btn btn-sm btn-success">View</button>
-                <button onClick={props.onEdit(user)} className="btn btn-sm btn-primary">Edit</button>
-                <button onClick={props.onDelete(user)} className="btn btn-sm btn-danger">Delete</button>
+                <button onClick={props.onEdit(user)} className="btn btn-sm btn-primary"><i className="fa fa-pencil-square-o" aria-hidden="true"></i> Edit</button>
+                {
+                  user.USER_IS_ACTIVE === 1 &&
+                  <button onClick={props.onChangeIsActiveUser(user)} className="btn btn-sm btn-danger"><i className="fa fa-lock" aria-hidden="true"></i> Disable</button>
+                }
+                {
+                  user.USER_IS_ACTIVE === 0 &&
+                  <button onClick={props.onChangeIsActiveUser(user)} className="btn btn-sm btn-success"><i className="fa fa-unlock" aria-hidden="true"></i> Enable</button>
+                }
               </td>
             </tr>
           )

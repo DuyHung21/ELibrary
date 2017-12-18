@@ -1,4 +1,15 @@
 import React, { Component } from "react";
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
+import { isEmpty } from "lodash";
+import {
+  onLoginUser,
+  onLogoutUser,
+  getUsersByAdmin,
+  onEditUserByAdmin,
+  onChangeIsActiveUserByAdmin,
+  dispatchScreenWaiting
+} from "../../actions";
 import { Route, Switch } from "react-router-dom";
 import { TableUser, FormUser } from "../../components/admin/users";
 
@@ -11,7 +22,7 @@ class Users extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: dataUser,
+      users: [],
       usersShow: [],
       userSelected: {},
       numUserOnPage: 5,
@@ -20,11 +31,21 @@ class Users extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.location.pathname === "/admin/users/edit") {
+      this.props.getUsersByAdmin();
+    }
+    if (!isEmpty(nextProps.allUsers)) {
+      this.setState({
+        users: nextProps.allUsers,
+        usersShow: nextProps.allUsers.slice(0, nextProps.allUsers.length),
+        numPages: Math.ceil(nextProps.allUsers.length / this.state.numUserOnPage)
+      })
+    }
+  }
+
   componentWillMount() {
-    this.setState({
-      usersShow: this.state.users.slice(0,this.state.numUserOnPage),
-      numPages: Math.ceil(this.state.users.length / this.state.numUserOnPage)
-    })
+    this.props.getUsersByAdmin();
   }
 
   handleMovePage = (i) => {
@@ -52,20 +73,31 @@ class Users extends Component {
     }
   } 
 
-  handleDeleteUser = (userDelete) => {
+  handleChangeIsActiveUser = (userDelete) => {
     return async () => {
-      const users = this.state.users.filter(user => {
-        return userDelete.id !== user.id;
-      })
-      await this.setState({
-        users,
-      })
-      this.handleMovePage(this.state.pageActive)();
+      try {
+        this.props.dispatchScreenWaiting(true);
+        await this.props.onChangeIsActiveUserByAdmin(userDelete);
+        await this.props.getUsersByAdmin();
+        this.props.dispatchScreenWaiting(false);   
+        this.handleMovePage(this.state.pageActive)();   
+      } catch (er) {
+        this.props.dispatchScreenWaiting(false);      
+        alert("Error Disable");
+      }
     }
   }
 
-  handleSubmitFormUser = (user) => {
-    console.log(user);
+  handleSubmitFormUser = async (user) => {
+    try {
+      this.props.dispatchScreenWaiting(true);
+      await this.props.onEditUserByAdmin(user);
+      this.props.dispatchScreenWaiting(false);
+      this.props.history.push("/admin/users");
+    } catch (er) {
+      this.props.dispatchScreenWaiting(false);
+      alert("Error Edit");
+    }
   }
 
   render() {
@@ -77,7 +109,7 @@ class Users extends Component {
           active={this.state.pageActive}
           onMovePage={this.handleMovePage}
           onEdit={this.handleEditUser}
-          onDelete={this.handleDeleteUser}
+          onChangeIsActiveUser={this.handleChangeIsActiveUser}
         />
       )
     }
@@ -104,4 +136,22 @@ class Users extends Component {
   }
 }
 
-export default Users;
+function mapStateToProps(state) {
+  return{
+    userActive: state.userActive,
+    allUsers: state.allUsers
+  }
+}
+
+function mapDispatchToProps(dispatch){
+  return bindActionCreators({
+    onLoginUser,
+    onLogoutUser,
+    getUsersByAdmin,
+    onEditUserByAdmin,
+    onChangeIsActiveUserByAdmin,
+    dispatchScreenWaiting
+  }, dispatch)
+}
+
+export default connect (mapStateToProps, mapDispatchToProps) (Users);

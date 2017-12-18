@@ -4,13 +4,15 @@ import books from "./books";
 import urlTmp from "./urlTmp";
 import faculties from "./faculty";
 import isLoadingScreen from "./screenWaiting";
+import allUsers from "./allUsers";
 
 const rootReducers = combineReducers({
   userActive,
   books,
   urlTmp,
   faculties,
-  isLoadingScreen
+  isLoadingScreen,
+  allUsers
 });
 
 export default rootReducers;

@@ -60,7 +60,7 @@ class UserControl extends Component {
           ...this.state.errors,
           uploadFile: {
             ...this.state.errors.uploadFile,
-            [e.target.id]: e.target.value === null || e.target.value === "" ? "Errors" : null,
+            [e.target.id]: e.target.value === null || e.target.value === "" ? "Errors" : (e.target.id === "descriptionDoc" && e.target.value.length > 100 ? null : "The string must be more than 50 charactor!"),
           }
         }
       })

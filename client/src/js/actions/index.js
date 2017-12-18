@@ -4,7 +4,11 @@ import {
   onRegisterUser,
   onCheckAuth,
   onUpdateUser,
-  onChangePass
+  onChangePass,
+  onCheckAuthAdmin,
+  getUsersByAdmin,
+  onEditUserByAdmin,
+  onChangeIsActiveUserByAdmin
 } from "./users";
 
 import {
@@ -46,6 +50,10 @@ export {
   onCheckAuth,
   onUpdateUser,
   onChangePass,
+  onCheckAuthAdmin,
+  getUsersByAdmin,
+  onEditUserByAdmin,
+  onChangeIsActiveUserByAdmin,
   //File
   uploadFile,
   getAllBooks,
