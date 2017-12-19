@@ -38,7 +38,7 @@ class Users extends Component {
     if (!isEmpty(nextProps.allUsers)) {
       this.setState({
         users: nextProps.allUsers,
-        usersShow: nextProps.allUsers.slice(0, nextProps.allUsers.length),
+        usersShow: nextProps.allUsers.slice(0, nextProps.allUsers.length < this.state.numUserOnPage ? nextProps.allUsers.length : this.state.numUserOnPage),
         numPages: Math.ceil(nextProps.allUsers.length / this.state.numUserOnPage)
       })
     }

@@ -3,7 +3,7 @@ import { isEmpty } from "lodash"
 import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 import {BoxContain} from "../components/common";
-
+import { NameFaculty } from "../api";
 import {
   searchBooks,
   dispatchScreenWaiting
@@ -17,10 +17,15 @@ class Search extends Component {
   }
 
   async componentWillReceiveProps(nextProps) {
-    if (nextProps.match.params.name && nextProps.match.params.name !== this.props.match.params.name) {
+    console.log(this.props);
+    if (nextProps.match.params.name && (nextProps.match.params.name !== this.props.match.params.name || nextProps.location.filter != this.props.location.filter)) {
       try {
         this.props.dispatchScreenWaiting(true);
-        await this.props.searchBooks(nextProps.match.params.name);
+        let pathName = nextProps.match.params.name;
+        if (nextProps.location.filter) {
+          pathName += `&categoryId=${nextProps.location.filter}`;
+        }
+        await this.props.searchBooks(pathName);
         this.props.dispatchScreenWaiting(false);
       } catch(er) {
         this.props.dispatchScreenWaiting(false);
@@ -32,7 +37,11 @@ class Search extends Component {
   async componentWillMount() {
     try {
       this.props.dispatchScreenWaiting(true);
-      await this.props.searchBooks(this.props.match.params.name);
+      let pathName = this.props.match.params.name;
+      if (this.props.location.filter) {
+        pathName += `&categoryId=${this.props.location.filter}`;
+      }
+      await this.props.searchBooks(pathName);
       this.props.dispatchScreenWaiting(false);
     } catch(er) {
       this.props.dispatchScreenWaiting(false);
@@ -53,7 +62,7 @@ class Search extends Component {
         {
           isEmpty(this.props.books) &&
           <div className="text-center">
-            <h3 className="text-danger"><i className="fa fa-meh-o" aria-hidden="true"></i> {`Oops! Không có sách nào trong kho theo tên "${this.props.match.params.name}"`}</h3>
+            <h3 className="text-danger"><i className="fa fa-meh-o" aria-hidden="true"></i> {`Oops! Không có sách nào trong kho theo tên "${this.props.match.params.name}" với bộ lọc "${NameFaculty[this.props.location.filter] ? NameFaculty[this.props.location.filter] : "tất cả"}"`}</h3>
           </div>
         }
         </BoxContain>

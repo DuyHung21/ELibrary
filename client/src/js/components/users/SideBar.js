@@ -3,10 +3,30 @@ import { Link } from "react-router-dom";
 import {
   BoxContain
 } from "../common";
+import $ from "jquery";
 
 export default props => {
+  $(function() {
+    let $sidebar   = $("#Sidebar"),
+        $window    = $(window),
+        offset     = $sidebar.offset(),
+        topPadding = 75;
+  
+    $window.scroll(function() {
+        if ($window.scrollTop() > offset.top - topPadding) {
+            $sidebar.css({
+                marginTop: $window.scrollTop() - offset.top + topPadding
+            });
+        } else {
+            $sidebar.stop().css({
+                marginTop: 0
+            });
+        }
+    });
+  });
+  
   return (
-    <div id="Sidebar">
+    <div id="Sidebar" className="sidebar-user">
       <BoxContain name="Thành viên">
         <div className="media">
           <div className="media-left pull-left">

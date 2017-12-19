@@ -10,6 +10,7 @@ import {
 import { Link } from "react-router-dom";
 import { BASE_URL } from "../../api";
 import BoxContain from '../common/BoxContain';
+import $ from "jquery";
 
 function MediaBook(props){
   return(
@@ -35,10 +36,6 @@ class MostViewBooks extends Component {
   constructor(props) {
     super(props);
   }
-
-  componentWillReceiveProps(nextProps) {
-  }
-
   render(){
     return(
       <BoxContain name = "Sách xem nhiều nhất">
@@ -117,12 +114,29 @@ class Sidebar extends Component {
   }
 
   render(){
+    $(function() {
+      let $sidebar   = $("#sidebar-container"),
+          $window    = $(window),
+          offset     = $sidebar.offset(),
+          topPadding = 75;
+    
+      $window.scroll(function() {
+          if ($window.scrollTop() > offset.top - topPadding) {
+              $sidebar.css({
+                  marginTop: $window.scrollTop() - offset.top + topPadding
+              });
+          } else {
+              $sidebar.stop().css({
+                  marginTop: 0
+              });
+          }
+      });
+    });
     return(
       <div id = "sidebar-container">
         <MostViewBooks
           topBooks={this.state.topBooks}
         />
-        <RecentActivity />
       </div>
     )
   }

@@ -7,7 +7,6 @@ class AllDocuments extends Component {
     return (
       <div className="all-document item-shadow">
         <div className="container">
-          <Pagination />
           <div className="all-book-container">
           {
             this.props.books.map(book => (
@@ -24,7 +23,6 @@ class AllDocuments extends Component {
             </div>
           }
           </div>
-          <Pagination />
         </div>
       </div>
     )

@@ -6,7 +6,7 @@ import { NameFaculty } from "../../api";
 import {
   getAllInfoFaculty,
 } from "../../actions";
-import Logo from '../../../assets/images/Logo.png';
+import Logo from '../../../assets/images/Logo.jpg';
 
 import { Link, Route, Redirect } from 'react-router-dom';
 import $ from 'jquery';
@@ -69,7 +69,7 @@ class Header extends Component {
 
   handleSearch = async (e) => {
     e.preventDefault();
-    const nameSearch = `${$("#inputSearch").val()}${this.state.curFilter?"&categoryId="+this.state.curFilter:""}`;
+    const nameSearch = `${$("#inputSearch").val()}`;
     this.setState({
       nameSearch,
       isRedirectSerach: true
@@ -81,13 +81,13 @@ class Header extends Component {
       <header>
         {
           this.state.isRedirectSerach &&
-            <Redirect to={`/search/${this.state.nameSearch}`} />
+            <Redirect to={{pathname: `/search/${this.state.nameSearch}`, filter: this.state.curFilter}} />
         }
         <div className = "container">
           <div className= "row">
             <div className = "col-sm-3">
               <div id="logo">
-                <Link to = "/home"><img src={Logo} alt="Logo"/></Link>
+                <Link to = "/home"><img style={{borderRadius: "20%"}} src={Logo} alt="Logo"/></Link>
               </div>
             </div>
 

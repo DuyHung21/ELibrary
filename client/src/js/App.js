@@ -19,6 +19,7 @@ import {LoginAdmin, Dashboard} from './containers/admin';
 
 import AuthRoute from './components/AuthRoute';
 import AuthAdminRoute from './components/admin/AuthAdminRoute';
+
 class AppIndex extends Component {
   render() {
     return (

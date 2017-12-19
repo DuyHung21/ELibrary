@@ -60,7 +60,7 @@ class UserControl extends Component {
           ...this.state.errors,
           uploadFile: {
             ...this.state.errors.uploadFile,
-            [e.target.id]: e.target.value === null || e.target.value === "" ? "Errors" : (e.target.id === "descriptionDoc" && e.target.value.length > 100 ? null : "The string must be more than 50 charactor!"),
+            [e.target.id]: e.target.value === null || e.target.value === "" ? "Errors" : (e.target.id === "descriptionDoc" ? (e.target.value.length > 100 ? null : "The string must be more than 50 charactor!") : null),
           }
         }
       })
@@ -105,10 +105,11 @@ class UserControl extends Component {
   }
 
   handleUploadFile = e => {
+    console.log(this.state.errors);
     e.preventDefault();
     let isAllowUpload = true;
     Object.keys(this.state.uploadFile).forEach(key => {
-      if (this.state.uploadFile[key] === null) {
+      if (this.state.uploadFile[key] === null || this.state.errors.uploadFile[key] !== null) {
         isAllowUpload = false;
       }
     })

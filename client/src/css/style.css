@@ -4,16 +4,20 @@ body{
 }
 
 .bg-main{
-  background-color: #736558;
+  background-color: #006157;
   color: #fbeaa6; 
 }
 
 .txt-color-main{
-  color: #736558;
+  color: #006157;
+}
+
+a {
+  color: #006157 !important;
 }
 
 .btn-main{
-  background-color: #5c5146;
+  background-color: #006157;
   color: #fbeaa6 !important;
   padding: 5px 10px;
   border-radius: 5px;
@@ -26,7 +30,7 @@ body{
 
 .btn-transparent {
   background-color: transparent;
-  border: 2px solid #5c5146;
+  border: 2px solid #006464;
   border-radius: 4px;
 }
 
@@ -44,12 +48,12 @@ body{
 }
 
 .btn-active {
-  background-color: #736558 !important;
+  background-color: #018b7e !important;
   color: #fbeaa6 !important;
 }
 
 .btn-pagination{
-  color: #736558 !important;
+  color: #018b7e !important;
 }
 
 .btn-pagination:hover{
@@ -68,7 +72,7 @@ header {
 }
 
 header #logo{
-  height: 80px;
+  height: 50px;
   overflow: hidden;
 }
 header #logo img{
@@ -76,14 +80,14 @@ header #logo img{
   width: auto;
 }
 header #search-top-bar, header #btn-user, #infoUser{
-  margin-top: 20px;
+  margin-top: 10px;
 }
 header #btn-user button, #infoUser button{
   margin-left: 5px;
 }
 
-header #infoUser a {
-  text-transform: capitalize;
+header #infoUser i {
+  color: #006464;
 }
 
 header #infoUser a:hover {
@@ -103,15 +107,19 @@ header .modal-content{
   color: white;
 }
 
+#sidebar-container{
+  min-height: 80vh;
+}
+
 #login-content #login-form, .FormSignUp-content {
   margin-top: 70px;
   background-color: rgb(250, 250, 250);
-  padding: 30px;
+  padding: 30px; /*Fixing*/
   box-shadow: 0 3px 8px rgb(100, 80, 38);
 }
 
 #login-container{
-  min-height: 68.3vh;
+  min-height: 72.7vh;
 }
 
 .loading-line {
@@ -162,6 +170,7 @@ header .modal-content{
   background-color: #fa9000;
   color: white;
 }
+
 
 footer{
   padding: 10px 0;
@@ -220,7 +229,7 @@ footer i{
 }
 .all-document .media-book .media-heading:hover {
   cursor: pointer;
-  color:  #5c5146;
+  color:  #006157;
 }
 
 #register-container .container {
@@ -242,7 +251,7 @@ footer i{
 
 /*USER CONTROL*/
 #user-container {
-  min-height: 465px;
+  min-height: 495px;
 }
 
 #user-container #Sidebar, #user-container .screen-control {
@@ -263,12 +272,12 @@ footer i{
 }
 
 #user-container #Sidebar .link-control i {
-  color: #5c5146;
+  color: #006157;
   width: 20px;
 }
 
 #user-container #Sidebar .link-control a {
-  color: #5c5146;
+  color: #006157;
 }
 
 #user-container #user-info .container {
@@ -297,7 +306,7 @@ footer i{
 }
 
 .status-book span i {
-  color: #5c5146;
+  color: #006157;
 }
 
 #ViewBook-container .book-card {
@@ -306,9 +315,6 @@ footer i{
   padding: 5px;
 }
 
-.view-book-frame{
-  
-}
 .view-book-frame button {
   margin-left: 15px;
 }
@@ -348,6 +354,34 @@ footer i{
 
 @media all and (max-width:900px) {
   header .container .row > div {
+    text-align: center;
+  }
+  #register-container .container {
+    width: 100%;
+    padding: 0 30px;
+  }
+  #login-content #login-form, .FormSignUp-content {
+    padding: 5px; /*Fixing*/
+  }
+  .modal-body {
+    padding: 15px !important;
+  }
+}
+
+@media all and (max-width: 600px) {
+  #sidebar-container, #Sidebar {
+    display: none;
+  }
+  #infoUser ul {
+    left: -50px !important;
+  }
+  #ViewBook-container .book-card img {
+    width: 100px !important;
+    height: 100px !important;
+  }
+  #ViewBook-container .book-card .media-left {
+    display: block !important;
+    float: none !important;
     text-align: center;
   }
 }

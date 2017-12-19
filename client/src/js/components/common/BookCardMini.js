@@ -15,8 +15,8 @@ const BookCardMini = props => {
           <div className="status-book">
             <span><i className="fa fa-database" aria-hidden="true"></i> Dung lượng: 0.2MB</span>
             <span><i className="fa fa-file" aria-hidden="true"></i> Kiểu file: PDF</span>
-            <span><i className="fa fa-eye" aria-hidden="true"></i> Lượt xem: 408</span>
-            <span><i className="fa fa-cloud-download" aria-hidden="true"></i> Lượt tải: 35</span>
+            <span><i className="fa fa-eye" aria-hidden="true"></i> Lượt xem: 13</span>
+            <span><i className="fa fa-cloud-download" aria-hidden="true"></i> Lượt tải: 3</span>
           </div>
           <p>Mục: <Link to={`/khoa/${props.book.CATEGORY_ID}`}>{NameFaculty[props.book.CATEGORY_ID]}</Link></p>
         </div>
